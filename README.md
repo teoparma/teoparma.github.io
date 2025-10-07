@@ -4,6 +4,8 @@ Welcome to my personal blog created for the **Statistics course** in the *MSc in
 
 This blog is dedicated to publishing the **weekly homework assignments** and **course projects** assigned by **Professor Gastaldi**. Each post will include a detailed explanation of the task, any data analysis performed, and visualizations or code implementations (where applicable).
 
+Homeworks are visibile at the [homeworks page] (/homeworks/hmwk-page.md)
+
 ---
 
 ## 🗂️ Contents
@@ -31,9 +33,4 @@ This blog may include content using tools such as:
 
 **Academic Year:** 2025/2026  
 **Instructor:** Prof. Gastaldi  
-**Course:** Statistics for Cybersecurity (MSc Program)
-
----
-
-Stay tuned for weekly updates and feel free to explore the work!
-
+**Course:** Statistics (MSc Cybersecurity)
