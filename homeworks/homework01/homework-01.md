@@ -18,11 +18,10 @@ Statistics encompasses the methods for:
 2.  **Organization and Processing:** Classifying, summarizing (using graphs or tables), and calculating key indicators (like mean, median, variance).
 3.  **Interpretation:** Drawing conclusions and making predictions based on the results obtained.
 
----
-
+#
 Statistics is traditionally divided into two broad areas, each with a distinct objective:
 
-### 1. Descriptive Statistics
+#### 1. Descriptive Statistics
 
 Descriptive Statistics aims to **summarize** and **describe** the main characteristics of a phenomenon observed across an entire collective or sample. It focuses on what is already known and observed.
 
@@ -30,7 +29,7 @@ Descriptive Statistics aims to **summarize** and **describe** the main character
 * **Tools:** Frequency tables, graphs (histograms, pie charts), measures of position (mean, mode, median), and measures of variability (standard deviation, variance).
 
 
-### 2. Inferential Statistics
+#### 2. Inferential Statistics
 
 Inferential Statistics uses data collected from a **sample** to draw **conclusions** (inferences) and **generalizations** about the entire **population** from which that sample was drawn. It operates under conditions of uncertainty using Probability Theory.
 
