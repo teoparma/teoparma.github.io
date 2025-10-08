@@ -10,7 +10,6 @@
 ## Answer:
 
 ### What is Statistics?
-<p style="text-align: justify;">
 **Statistics** is the scientific discipline concerned with the **quantitative study** of **collective phenomena** under conditions of uncertainty. Its main goal is to transform a collection of **raw data** into usable **information** and **knowledge** to enable informed decision-making or better understanding of reality. 
 
 Statistics encompasses the methods for:
@@ -54,4 +53,3 @@ Statistics defines the **"normal"** behavior of network traffic or users (e.g., 
 
 #### 3. Machine Learning and Prevention (Prediction)
 Advanced Machine Learning algorithms for security (e.g., for next-generation *firewalls* or *Intrusion Detection Systems*) are inherently based on statistics to **classify** traffic as legitimate or malicious. Statistics provides the *framework* for training and evaluating the **accuracy** of these models.
-</p>
