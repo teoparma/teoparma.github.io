@@ -18,7 +18,9 @@ Statistics encompasses the methods for:
 2.  **Organization and Processing:** Classifying, summarizing (using graphs or tables), and calculating key indicators (like mean, median, variance).
 3.  **Interpretation:** Drawing conclusions and making predictions based on the results obtained.
 
-#
+<br>
+<br>
+
 Statistics is traditionally divided into two broad areas, each with a distinct objective:
 
 #### 1. Descriptive Statistics
