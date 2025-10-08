@@ -2,7 +2,9 @@
 
 Welcome to my personal blog created for the **Statistics course** in the *MSc in Cybersecurity* program at **Sapienza University of Rome**.
 
-This blog is dedicated to publishing the **weekly homework assignments** and **course projects** assigned by **Professor Gastaldi**. Each post will include a detailed explanation of the task, any data analysis performed, and visualizations or code implementations (where applicable).
+This blog is dedicated to publishing the **weekly homework assignments** assigned by **Professor Gastaldi**.
+
+-
 
 Homeworks are visibile at the [homeworks page](homeworks/hmwk-page.md)
 
