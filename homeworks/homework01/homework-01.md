@@ -1,4 +1,4 @@
-# 📝 Statistics and Cybersecurity Homework 📊🔒
+# 📝 Homework #01 📊🔒
 
 ---
 
@@ -8,22 +8,42 @@
 
 ---
 
-## Suggested Answer:
+## Answer:
 
 ### What is Statistics?
 
-**Statistics** is the scientific discipline concerned with the collection, analysis, interpretation, and presentation of large amounts of numerical **data**. Its primary goal is to draw **meaningful conclusions** and make **informed decisions** based on empirical evidence, transforming raw data into **information** and **knowledge**.
+**Statistics** is the scientific discipline concerned with the **quantitative study** of **collective phenomena** under conditions of uncertainty. Its main goal is to transform a collection of **raw data** into usable **information** and **knowledge** to enable informed decision-making or better understanding of reality. 
 
-It is generally divided into two main branches:
+Statistics encompasses the methods for:
+1.  **Collection:** Planning the survey and gathering the necessary data.
+2.  **Organization and Processing:** Classifying, summarizing (using graphs or tables), and calculating key indicators (like mean, median, variance).
+3.  **Interpretation:** Drawing conclusions and making predictions based on the results obtained.
 
-1.  **Descriptive Statistics:** Summarizes and describes the main features of a data set (e.g., calculating the mean, median, standard deviation).
-2.  **Inferential Statistics:** Uses data from a sample to make predictions or inferences about a larger population, calculating the probability of those inferences.
+---
+
+Statistics is traditionally divided into two broad areas, each with a distinct objective:
+
+### 1. Descriptive Statistics
+
+Descriptive Statistics aims to **summarize** and **describe** the main characteristics of a phenomenon observed across an entire collective or sample. It focuses on what is already known and observed.
+
+* **Goal:** To represent data clearly and concisely.
+* **Tools:** Frequency tables, graphs (histograms, pie charts), measures of position (mean, mode, median), and measures of variability (standard deviation, variance).
+
+
+### 2. Inferential Statistics
+
+Inferential Statistics uses data collected from a **sample** to draw **conclusions** (inferences) and **generalizations** about the entire **population** from which that sample was drawn. It operates under conditions of uncertainty using Probability Theory.
+
+* **Goal:** To estimate population parameters and test hypotheses with a certain degree of probability.
+* **Tools:** Estimation theory (point and interval estimation), hypothesis testing (statistical tests), and regression models.
+
 
 ---
 
 ### Why is Statistics Useful for Cybersecurity?
 
-Statistics is a **fundamental** tool in cybersecurity because it enables the detection and prediction of abnormal or malicious behavior that simple rule sets often fail to identify.
+Statistics is a **fundamental** tool in cybersecurity because it enables the detection and prediction of abnormal or malicious behavior.
 
 #### 1. Anomaly Detection
 Statistics defines the **"normal"** behavior of network traffic or users (e.g., number of logins, volume of data exchanged). Significant variations from the average or historical patterns (**outliers**) are indicators of potential **attacks, malware, or unauthorized access** (e.g., *brute-force attempts* or *data exfiltration*).
@@ -34,5 +54,3 @@ Statistics defines the **"normal"** behavior of network traffic or users (e.g., 
 
 #### 3. Machine Learning and Prevention (Prediction)
 Advanced Machine Learning algorithms for security (e.g., for next-generation *firewalls* or *Intrusion Detection Systems*) are inherently based on statistics to **classify** traffic as legitimate or malicious. Statistics provides the *framework* for training and evaluating the **accuracy** of these models.
-
-In summary, statistics is the mathematical backbone that transforms the **chaos** of network data into usable **insights**, which are essential for **defending, detecting, and responding** proactively and effectively to constantly evolving cyber threats.
