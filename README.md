@@ -10,27 +10,6 @@ Homeworks are visibile at the [homeworks page](homeworks/hmwk-page.md)
 
 ---
 
-## 🗂️ Contents
-
-- Weekly Homework Assignments
-- Course Projects
-- Data Analysis Reports
-- Statistical Visualizations
-- Reflections and Learning Notes
-
----
-
-## 🔧 Tools & Technologies
-
-This blog may include content using tools such as:
-
-- Python / R for statistical computing
-- Jupyter / Quarto Notebooks
-- Pandas, NumPy, Matplotlib, Seaborn
-- Markdown & LaTeX for documentation
-
----
-
 ## 📅 Course Year
 
 **Academic Year:** 2025/2026  
