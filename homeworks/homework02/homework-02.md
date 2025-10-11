@@ -10,8 +10,6 @@ A dataset is a matrix in which:
 - The rows are the **statistical units**: the things we want to study.
 - The columns are their **variables**: the attributes of the statistical units we interested in, operationalized in some way.
 
----
-
 ### Distribution
 A distribution rapresent the way in which a certain variable manifests itselfe in a dataset
 
@@ -19,10 +17,14 @@ In **Descriptive Statistics** a distribution rapresents the *frequency* in which
 
 In **Inferential Satistics** a distribution rapresents all the possible values a certain variable can assume with the probability that value accours. It is a mathematical model binding a specific probability for each possible value.
 
+---
+
 <br><br><br>
 
 ## Using a DBMS create a simple dataset. Compute the univariate distribution.
 ### 🏆*For champions: compute a bivariate distribution*
+
+---
 
 Using MariaDB I've created a simple dataset containing the heights, the eye color and hair color of a group of people:
 
