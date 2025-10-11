@@ -17,9 +17,9 @@ In **Descriptive Statistics** a distribution rapresents the *frequency* in which
 
 In **Inferential Satistics** a distribution rapresents all the possible values a certain variable can assume with the probability that value accours. It is a mathematical model binding a specific probability for each possible value.
 
----
+<br><br>
 
-<br><br><br>
+---
 
 ## Using a DBMS create a simple dataset. Compute the univariate distribution.
 ### 🏆*For champions: compute a bivariate distribution*
