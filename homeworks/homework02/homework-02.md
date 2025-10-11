@@ -22,7 +22,7 @@ In **Inferential Satistics** a distribution rapresents all the possible values a
 <br><br><br>
 
 ## Using a DBMS create a simple dataset. Compute the univariate distribution.
-### *For champions🏆: compute a bivariate distribution*
+### 🏆*For champions: compute a bivariate distribution*
 
 Using MariaDB I've created a simple dataset containing the heights, the eye color and hair color of a group of people:
 
@@ -32,7 +32,7 @@ Using MariaDB I've created a simple dataset containing the heights, the eye colo
 The following tables show the univariate distribution for each variable.
 These distributions were obtained running the following SQL queries:
 
-\`\`\`sql
+```sql
 SELECT 
 	<attribute>, 
 	COUNT(<attribute>) AS frequency 
@@ -40,7 +40,7 @@ FROM
 	`homework-01` 
 GROUP BY 
 	<attribute>
-\`\`\`
+```
 
 <img src="../images/height.png" width="30%" /> <img src="../images/eye_color.png" width="30%" /> <img src="../images/hair_color.png" width="30%" />
 
@@ -48,7 +48,7 @@ GROUP BY
 The following tables show the bivariate distribution for each couple of variables.
 These distributions were obtained running the following SQL queries:
 
-\`\`\`sql
+```sql
 SELECT
     <attribute1>,
     <attribute2>,
@@ -60,7 +60,7 @@ GROUP BY
     <attribute2>
 ORDER BY
     <attribute1> ASC, frequency DESC
-  \`\`\`
+  ```
 
 <img src="../images/height-eye_color.png" width="30%" /> <img src="../images/height-hair_color.png" width="30%" /> <img src="../images/eye_color-hair_color.png" width="30%" />
 
