@@ -1,6 +1,3 @@
-const { text } = require('stream/consumers');
-
-
 const language_frequencies = [
     {
         language: 'EN', // Inglese
@@ -300,3 +297,4 @@ document.addEventListener('DOMContentLoaded', () => {
         displayMessage(outputHTML, resultOutput);
     });
 });
+
