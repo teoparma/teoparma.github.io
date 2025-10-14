@@ -109,6 +109,7 @@ function compair_frequencies(enc_frequency){
         freq_map = lang.frequency   
         distance[language] = 0
 
+        //language frequencies are ordered yet
         for(const [_, value] of enc_frequency){
             exp_value = [...freq_map.entries()][i][1]
             distance[language] += ((value - exp_value)**2)/exp_value
@@ -235,12 +236,12 @@ document.addEventListener('DOMContentLoaded', () => {
         encryptedOutput.value = encryptedText;
 
         // 2. Visualizzazione del risultato
-        displayMessage(`
+        /*displayMessage(`
             <h2>Operazione Eseguita</h2>
             <p><strong>Modalità:</strong> Cifratura (Encode)</p>
             <p><strong>Chiave (Rotazione):</strong> <span style="font-size: 1.2em; color: #3B82F6;">${rot}</span></p>
             <p>Testo cifrato generato con successo.</p>
-        `, resultOutput);
+        `, resultOutput);*/
     });
 
 
@@ -251,6 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Pulizia dell'output
         displayMessage('', resultOutput);
         decryptedOutput.value = '';
+        
 
         if (!ciphertext || ciphertext.trim().length < 10) { // Aumenta il minimo per una buona analisi
             displayMessage('<div style="color: red; padding: 10px;">Inserisci un testo cifrato di almeno 10 caratteri per un\'analisi accurata.</div>', resultOutput);
@@ -260,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 1. Esegue l'analisi e la comparazione
         const analysisResult = frequency_analysis(ciphertext);
         const { rot, min_lang, distances, enc_sorted_array } = analysisResult;
-        
+
         // Controlla se l'analisi ha trovato una rotazione
         if (rot === null) {
             displayMessage('<div style="color: orange; padding: 10px;">Impossibile eseguire l\'analisi. Il testo non contiene lettere valide.</div>', resultOutput);
@@ -276,8 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <h2>Risultati Analisi (Decifratura Automatica)</h2>
             <p><strong>Lingua Rilevata:</strong> <span style="font-size: 1.2em; color: #10B981;">${min_lang}</span></p>
             <p><strong>Chiave (Rotazione):</strong> <span style="font-size: 1.2em; color: #3B82F6;">${rot}</span></p>
-            <p>Lettera cifrata più comune nel testo: <strong>${enc_sorted_array[0][0]} (${enc_sorted_array[0][1].toFixed(2)}%)</strong></p>
-            <p>Lettera standard più comune in ${min_lang}: <strong>${language_frequencies.find(l => l.language === min_lang).frequency.keys().next().value}</strong></p>
             <hr class="my-3">
             <h3>Distanze di Somiglianza (Minore è, Meglio è)</h3>
             <table class="w-full text-left border-collapse mt-2 text-sm">
@@ -288,14 +288,15 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         
         // Ordina le distanze per mostrarle dalla più vicina alla più lontana
-        const sortedDistances = Object.entries(distances).sort((a, b) => a[1] - b[1]);
+        /*const sortedDistances = Object.entries(distances).sort((a, b) => a[1] - b[1]);
+        
 
         sortedDistances.forEach(([lang, dist]) => {
             outputHTML += `<tr><td class="py-1 px-4 border-b">${lang}</td><td class="py-1 px-4 border-b">${dist.toFixed(4)}</td></tr>`;
-        });
+        });*/
 
         outputHTML += `</tbody></table>`;
-        
+
         displayMessage(outputHTML, resultOutput);
     });
 });
