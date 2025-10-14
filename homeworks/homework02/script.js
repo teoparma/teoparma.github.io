@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const keyInput = document.getElementById('keyInput');
     const resultOutput = document.getElementById('resultOutput');
     const decryptedOutput = document.getElementById('decryptedOutput');
-    const encryptedOutput = document.getElementById('decryptedOutput');
+    const encryptedOutput = document.getElementById('encryptedOutput');
 
     // Funzione helper per visualizzare i messaggi nell'area di output
     function displayMessage(message, targetElement) {
@@ -299,5 +299,6 @@ document.addEventListener('DOMContentLoaded', () => {
         displayMessage(outputHTML, resultOutput);
     });
 });
+
 
 
