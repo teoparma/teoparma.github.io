@@ -193,9 +193,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const analyzeButton = document.getElementById('analyzeButton');
     const encryptButton = document.getElementById('encryptButton');
     const ciphertextInput = document.getElementById('ciphertextInput');
+    const plaintextInput = document.getElementById('plaintextInput');
     const keyInput = document.getElementById('keyInput');
     const resultOutput = document.getElementById('resultOutput');
     const decryptedOutput = document.getElementById('decryptedOutput');
+    const encryptedOutput = document.getElementById('decryptedOutput');
 
     // Funzione helper per visualizzare i messaggi nell'area di output
     function displayMessage(message, targetElement) {
@@ -215,11 +217,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Listener per il pulsante di CIFRATURA
     encryptButton.addEventListener('click', () => {
-        const plaintext = ciphertextInput.value;
+        const plaintext = plaintextInput.value;
         const rot = getValidKey();
 
         displayMessage('', resultOutput);
-        decryptedOutput.value = '';
+        encryptedOutput.value = '';
 
         if (!plaintext || plaintext.trim().length === 0) {
             displayMessage('<div style="color: red; padding: 10px;">Inserisci un testo da cifrare nel campo di input.</div>', resultOutput);
@@ -230,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 1. Cifra il testo
         const encryptedText = encrypt(plaintext, rot);
-        decryptedOutput.value = encryptedText;
+        encryptedOutput.value = encryptedText;
 
         // 2. Visualizzazione del risultato
         displayMessage(`
@@ -297,4 +299,5 @@ document.addEventListener('DOMContentLoaded', () => {
         displayMessage(outputHTML, resultOutput);
     });
 });
+
 
