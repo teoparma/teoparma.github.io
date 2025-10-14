@@ -162,6 +162,13 @@ ORDER BY
         <h2 class="text-2xl font-bold text-gray-800 mb-4 text-blue-600">
             Funzionalità Accessoria: Cifratura (Encode)
         </h2>
+
+		<h2 class="text-xl font-semibold text-gray-700 mb-3">Inserisci il plaintext da cifrare</h2>
+        <div class="mb-6">
+            <textarea id="plaintextInput" rows="8" maxlength="5000" 
+                      placeholder="Incolla qui il testo cifrato. L'analisi di frequenza rileverà lingua e chiave (rotazione) automaticamente."
+                      class="w-full p-4 border border-gray-300 rounded-lg focus:border-orange-500"></textarea>
+        </div>
         
         <!-- Input Chiave per Cifratura -->
         <div class="mb-5 flex items-center space-x-4">
@@ -177,6 +184,12 @@ ORDER BY
                 class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-150 transform hover:scale-[1.01]">
             ✨ Cifra il Testo
         </button>
+
+        <!-- SEZIONE 2: RISULTATO (DECIFRATO) -->
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Crypted text</h2>
+        <textarea id="encryptedOutput" rows="8" readonly
+                  placeholder="Il testo cifrato apparirà qui, usando la chiave trovata tramite analisi di frequenza."
+                  class="w-full p-4 bg-green-50 border border-green-300 rounded-lg text-gray-700"></textarea>
         
         <p class="mt-8 text-sm text-gray-500 text-center">
             Progetto realizzato in JavaScript per l'analisi statistica dei cifrari a sostituzione semplice.
