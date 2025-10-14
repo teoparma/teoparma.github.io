@@ -3,31 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analizzatore Cifrario di Cesare</title>
+    <title>Analizzatore Cifrario di Cesare | Homework #02</title>
+    <!-- Carica Tailwind CSS per lo styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Stili CSS di base */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f4f7f9; min-height: 100vh; }
-        .container { max-width: 900px; }
-        textarea { resize: none; transition: all 0.2s; }
-        textarea:focus { outline: none; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.4); } /* Arancione per focus */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f4f7f9; 
+            min-height: 100vh; 
+        }
+        .container { 
+            max-width: 900px; 
+        }
+        textarea { 
+            resize: none; 
+            transition: all 0.2s; 
+        }
+        textarea:focus { 
+            outline: none; 
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.4); 
+        } /* Arancione per focus */
+        
+        /* Stili per il contenuto importato */
+        .markdown-container h1 { font-size: 2.5rem; font-weight: 700; margin-top: 1.5rem; }
+        .markdown-container h2 { font-size: 2rem; font-weight: 600; margin-top: 2rem; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;}
+        .markdown-container h3 { font-size: 1.5rem; font-weight: 600; margin-top: 1.5rem; }
+        .markdown-container p, .markdown-container ul { margin-top: 1rem; line-height: 1.6; }
+        .markdown-container strong { font-weight: 700; }
+        .markdown-container code { background-color: #e9e9e9; padding: 2px 4px; border-radius: 4px; }
+        .markdown-container pre { background-color: #f4f4f4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 1rem; }
+        .markdown-container ul { list-style-type: disc; margin-left: 20px; padding-left: 10px; }
     </style>
 </head>
 <body class="p-4 sm:p-8">
 
     <div class="container mx-auto bg-white p-6 sm:p-10 rounded-xl shadow-2xl">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-2 text-orange-600">
-            Crittanalisi del Cifrario di Cesare
+        
+        <div class="markdown-container">
+            <h1 class="text-orange-600">&#x1F4DD; Homework #02</h1>
+            <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
+        
+            <h2>Explain the concept of <strong>dataset</strong> and <strong>distribution</strong></h2>
+            <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
+        
+            <h3>Dataset</h3>
+            <p>A dataset is a matrix in which:</p>
+            <ul style="list-style-type: disc; margin-left: 20px;">
+                <li>The rows are the <strong>statistical units</strong>: the things we want to study.</li>
+                <li>The columns are their <strong>variables</strong>: the attributes of the statistical units we interested in, operationalized in some way.</li>
+            </ul>
+        
+            <h3>Distribution</h3>
+            <p>A distribution rapresent the way in which a certain variable manifests itselfe in a dataset</p>
+        
+            <p>In <strong>Descriptive Statistics</strong> a distribution rapresents the <em>frequency</em> in which diffents values of a variable manifest themselfe in a dataset. A distribution can be univariate, concerning just one attribute, bivariate, considering two variables, or multivariate.</p>
+        
+            <p>In <strong>Inferential Satistics</strong> a distribution rapresents all the possible values a certain variable can assume with the probability that value accours. It is a mathematical model binding a specific probability for each possible value.</p>
+        
+            <div style="margin: 40px 0;"></div>
+            <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
+        
+            <h2>Using a DBMS create a simple dataset. Compute the univariate distribution.</h2>
+            <h3 class="text-yellow-600">&#x1F3C6;<em>For champions: compute a bivariate distribution</em></h3>
+            <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
+        
+            <p>Using MariaDB I've created a simple dataset containing the heights, the eye color and hair color of a group of people:</p>
+        
+            <p style="text-align: center;">
+                <img src="../images/dataset.png" alt="Esempio di dataset" style="max-width: 100%; height: auto;">
+            </p>
+        
+            <h3>Univariate Distributions</h3>
+            <p>The following tables show the univariate distribution for each variable.
+            These distributions were obtained running the following SQL queries:</p>
+        
+            <pre><code style="color: #333;">SELECT
+	&lt;attribute&gt;,
+	COUNT(&lt;attribute&gt;) AS frequency
+FROM
+	`homework-01`
+GROUP BY
+	&lt;attribute&gt;</code></pre>
+        
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin: 20px 0;">
+                <img src="../images/height.png" alt="Distribuzione Univariata Altezza" style="width: 30%; min-width: 150px; margin: 5px;">
+                <img src="../images/eye_color.png" alt="Distribuzione Univariata Colore Occhi" style="width: 30%; min-width: 150px; margin: 5px;">
+                <img src="../images/hair_color.png" alt="Distribuzione Univariata Colore Capelli" style="width: 30%; min-width: 150px; margin: 5px;">
+            </div>
+        
+        
+            <h3>Bivariate Distributions</h3>
+            <p>The following tables show the bivariate distribution for each couple of variables.
+            These distributions were obtained running the following SQL queries:</p>
+        
+            <pre><code style="color: #333;">SELECT
+    &lt;attribute1&gt;,
+    &lt;attribute2&gt;,
+    COUNT(*) AS frequency
+FROM
+    `homework-01`
+GROUP BY
+    &lt;attribute1&gt;,
+    &lt;attribute2&gt;
+ORDER BY
+    &lt;attribute1&gt; ASC, frequency DESC</code></pre>
+        
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin: 20px 0;">
+                <img src="../images/height-eye_color.png" alt="Distribuzione Bivariata Altezza e Colore Occhi" style="width: 30%; min-width: 150px; margin: 5px;">
+                <img src="../images/height-hair_color.png" alt="Distribuzione Bivariata Altezza e Colore Capelli" style="width: 30%; min-width: 150px; margin: 5px;">
+                <img src="../images/eye_color-hair_color.png" alt="Distribuzione Bivariata Colore Occhi e Colore Capelli" style="width: 30%; min-width: 150px; margin: 5px;">
+            </div>
+
+        </div>
+        
+        <!-- ########################################## -->
+        <!-- FINE SEZIONE CONTENUTO TEORICO -->
+        <!-- ########################################## -->
+        
+        
+        <h1 class="text-3xl font-bold text-gray-800 my-8 pt-4 border-t border-gray-400 text-orange-600">
+            Strumento Interattivo: Crittanalisi del Cifrario di Cesare
         </h1>
 
-        <h2 class="text-xl font-semibold text-gray-700 mb-3">1. Inserisci il Testo Cifrato</h2>
+
+        <!-- SEZIONE 1: INPUT PRINCIPALE (TESTO CIFRATO) -->
+        <h2 class="text-xl font-semibold text-gray-700 mb-3">1. Inserisci il Testo Cifrato da Analizzare</h2>
         <div class="mb-6">
             <textarea id="ciphertextInput" rows="8" maxlength="5000" 
                       placeholder="Incolla qui il testo cifrato. L'analisi di frequenza rileverà lingua e chiave (rotazione) automaticamente."
                       class="w-full p-4 border border-gray-300 rounded-lg focus:border-orange-500"></textarea>
         </div>
         
+        <!-- Pulsante principale di DECIFRATURA -->
         <button id="analyzeButton" 
                 class="w-full sm:w-auto px-8 py-3 bg-orange-600 text-white font-bold rounded-lg shadow-md hover:bg-orange-700 transition duration-150 transform hover:scale-[1.01]">
             🚀 Esegui Crittanalisi e Decifra
@@ -35,11 +144,13 @@
         
         <hr class="my-8 border-t border-gray-200">
 
+        <!-- SEZIONE 2: RISULTATO (DECIFRATO) -->
         <h2 class="text-2xl font-bold text-gray-800 mb-4">2. Testo Decifrato</h2>
         <textarea id="decryptedOutput" rows="8" readonly
                   placeholder="Il testo decifrato apparirà qui, usando la chiave trovata tramite analisi di frequenza."
                   class="w-full p-4 bg-green-50 border border-green-300 rounded-lg text-gray-700"></textarea>
 
+        <!-- SEZIONE 3: DETTAGLI ANALISI -->
         <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4">3. Dettagli dell'Analisi</h2>
         <div id="resultOutput" class="p-6 bg-yellow-50 rounded-lg border border-yellow-200">
             <p class="text-gray-600">I risultati dell'analisi (Lingua, Rotazione, Dettagli di somiglianza) appariranno qui.</p>
@@ -47,10 +158,12 @@
         
         <hr class="my-10 border-t border-gray-200">
 
+        <!-- SEZIONE 4: FUNZIONALITÀ ACCESSORIA (CIFRATURA) -->
         <h2 class="text-2xl font-bold text-gray-800 mb-4 text-blue-600">
             Funzionalità Accessoria: Cifratura (Encode)
         </h2>
         
+        <!-- Input Chiave per Cifratura -->
         <div class="mb-5 flex items-center space-x-4">
             <label for="keyInput" class="text-base font-medium text-gray-700">
                 Chiave di Rotazione (0-25):
@@ -59,6 +172,7 @@
                    class="w-20 p-2 border border-blue-300 rounded-lg text-center focus:border-blue-500">
         </div>
         
+        <!-- Pulsante di CIFRATURA -->
         <button id="encryptButton" 
                 class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-150 transform hover:scale-[1.01]">
             ✨ Cifra il Testo
@@ -70,6 +184,7 @@
 
     </div>
 
+    <!-- Collegamento al file JavaScript contenente tutta la logica -->
     <script src="script.js"></script>
 </body>
 </html>
