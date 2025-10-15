@@ -66,3 +66,15 @@ ORDER BY
 
 <img src="../images/height-eye_color.png" width="30%" /> <img src="../images/height-hair_color.png" width="30%" /> <img src="../images/eye_color-hair_color.png" width="30%" />
 
+<h1>Ceasar Cipher Decryption Through Frequency Analysis</h1>
+<h2>Encryption Functionality</h2>
+<h2>Plaintext to decrypt</h2>
+
+<form>
+	<input type="text" id="plaintextInput" rows="8" maxlength="5000" placeholder="Paste the ciphertext here. Frequency analysis will automatically detect the language and key (rotation)."
+</form>
+	
+<label for="keyInput" class="text-base font-medium text-gray-700">Rotation Key (0-25):</label>
+<input type="number" id="keyInput" min="0" max="25" value="3" class="w-20 p-2 border border-blue-300 rounded-lg text-center focus:border-blue-500">
+
+<button id="encryptButton" class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-150 transform hover:scale-[1.01]">✨ Cifra il Testo</button>
