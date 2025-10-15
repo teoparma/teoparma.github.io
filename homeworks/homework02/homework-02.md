@@ -70,8 +70,15 @@ ORDER BY
 
 <h2>Insert plaintext to decrypt</h2>
 
-<textarea id="plaintextInput" rows="8" maxlength="5000" 
+<input id="plaintextInput" rows="8" maxlength="5000" 
 	placeholder="Paste the ciphertext here. Frequency analysis will automatically detect the language and key (rotation)."
-</textarea>
+</input>
 
+<label for="keyInput">
+        Rotation Key (0-25):
+</label>
+
+<input type="number" id="keyInput" min="0" max="25" value="3">
+
+<button id="encryptButton">✨ Cifra il Testo</button>
 
