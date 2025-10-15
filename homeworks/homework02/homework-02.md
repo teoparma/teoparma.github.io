@@ -66,3 +66,12 @@ ORDER BY
 
 <img src="../images/height-eye_color.png" width="30%" /> <img src="../images/height-hair_color.png" width="30%" /> <img src="../images/eye_color-hair_color.png" width="30%" />
 
+<h1>Ceasar Cipher Decryption Through Frequency Analysis</h1>
+
+<h2>Insert plaintext to decrypt</h2>
+
+<textarea id="plaintextInput" rows="8" maxlength="5000" 
+	placeholder="Paste the ciphertext here. Frequency analysis will automatically detect the language and key (rotation)."
+</textarea>
+
+
