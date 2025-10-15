@@ -6,6 +6,9 @@
     <title>Analizzatore Cifrario di Cesare | Homework #02</title>
     <!-- Load Tailwind CSS for the styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!--For using Latex-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" xintegrity="sha384-wn8B7AL26CNhggS8g2R38d9A34c/A/37k2b1n2/zT9P/3G62Y6G03T4FwB5RjA6A" crossorigin="anonymous">
+
     <style>
         /*CSS Styles*/
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
@@ -34,7 +37,26 @@
         .markdown-container code { background-color: #e9e9e9; padding: 2px 4px; border-radius: 4px; }
         .markdown-container pre { background-color: #f4f4f4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 1rem; }
         .markdown-container ul { list-style-type: disc; margin-left: 20px; padding-left: 10px; }
+    
+        /* Stile per il messaggio di feedback di copia */
+        #copyFeedback {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(20px);
+        }
+        #copyFeedback.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
+    <!-- Script KaTeX for LaTeX visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" xintegrity="sha384-hdn6I5HhD1fV/A8/k+x+Gf8XW2Y+2G6M3qfX8S6F9L/Y6n6p8O7Z4d4p4f4N4d4" crossorigin="anonymous"></script>
+    <!-- Auto-render for LaTex -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" xintegrity="sha384-y73x8fI7L8oEaXz9PZ9Bq9p6jR6E0/o+l/E6J/P/3G62Y6P9I7O7P4N4d4" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
 </head>
 <body class="p-4 sm:p-8">
 
@@ -86,7 +108,7 @@ FROM
 GROUP BY
 	&lt;attribute&gt;</code></pre>
         
-            <div class="flex justify-center flex-wrap my-5 space-x-2">
+            <div class="flex justify-center flex-wrap my-5 space-x-2  items-start">
                 <img src="../images/height.png" class="w-full max-w-[calc(25%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
                 <img src="../images/eye_color.png" class="w-full max-w-[calc(25%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
                 <img src="../images/hair_color.png" class="w-full max-w-[calc(25%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
@@ -109,10 +131,15 @@ GROUP BY
 ORDER BY
     &lt;attribute1&gt; ASC, frequency DESC</code></pre>
         
-            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin: 20px 0;">
+            <!--<div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin: 20px 0;">
                 <img src="../images/height-eye_color.png" style="width: 30%; min-width: 150px; margin: 5px;">
                 <img src="../images/height-hair_color.png" style="width: 30%; min-width: 150px; margin: 5px;">
                 <img src="../images/eye_color-hair_color.png" style="width: 30%; min-width: 150px; margin: 5px;">
+            </div> -->
+            <div class="flex justify-center flex-wrap my-5 space-x-2 items-start">
+                <img src="../images/height-eye_color.png" class="w-full max-w-[calc(30%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
+                <img src="../images/height-hair_color.png" class="w-full max-w-[calc(30%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
+                <img src="../images/eye_color-hair_color.png" class="w-full max-w-[calc(30%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
             </div>
 
         </div>
@@ -134,7 +161,13 @@ ORDER BY
         <div class="mb-6">
             <textarea id="plaintextInput" rows="8" maxlength="5000" 
                       placeholder="Paste the ciphertext here. Frequency analysis will automatically detect the language and key (rotation)."
-                      class="w-full p-4 border border-gray-300 rounded-lg focus:border-orange-500"></textarea>
+                      class="w-full p-4 border border-gray-300 rounded-lg focus:border-orange-500">
+The ancient manuscript lay open on the oak table, its parchment thin and brittle with age. Inspector Davies leaned closer, his magnifying glass tracing the lines of unusual script. It wasn't Latin or Greek; it was clearly a cipher, a rudimentary substitution that pointed straight to a schoolboy's game—the Caesar shift. 'Elementary, my dear Watson,' he muttered, though no one else occupied the echoing silence of the archive room. The task, however, was far from trivial. A significant quantity of text was necessary to defeat the simplicity of the encoding. A short phrase might hide the key forever, demanding endless, frustrating trial and error.
+
+Davies understood that the beauty of frequency analysis rests entirely on the law of large numbers. Every language possesses its own cryptographic fingerprint. In English, the letter 'E' reigns supreme, a constant monarch of the alphabet, followed closely by 'T', 'A', 'O', 'I', 'N', and 'S'. If the cryptographer could accurately calculate the frequency of every unique character appearing in the message, the highest count must, by statistical necessity, correspond to 'E' in the original plaintext. The offset between the most frequent character in the cipher text and 'E' would reveal the hidden key.
+
+He began the tedious work, meticulously logging the occurrences of 'A' through 'Z'. The text, relating to a long-forgotten territorial dispute over a hidden quarry, was dense and rich with repeating patterns, a gift for his analytical mind. Soon, a dominant character emerged: 'X'. It occurred far more frequently than any other letter. 'X', therefore, must be the substituted form of 'E'. Counting the letters between 'E' and 'X' in the alphabet would expose the magnitude of the shift, unlocking not just this paragraph, but the entire, long-dormant conspiracy. The remaining characters would then cascade into sensible words, transforming the gibberish into coherent, compelling narrative evidence, finally giving voice to the silent pages.
+            </textarea>
         </div>
         
         <!-- Encryption Key Input -->
@@ -152,8 +185,15 @@ ORDER BY
             ✨ Encrypt
         </button>
 
+       <div style="height: 50px;"></div>
+
         <!-- ENCRYPTED TEXT RESUL -->
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Crypted text</h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Encrypted text
+            <!-- NUOVO PULSANTE COPIA -->
+            <button class="copy-btn bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-1 px-3 rounded-md text-sm transition" data-target="encryptedOutput">
+                <span class="lucide lucide-copy w-4 h-4 inline-block mr-1"></span> Copia
+            </button>
+        </h2>
         <textarea id="encryptedOutput" rows="8" readonly
                   placeholder="The encrypted text will appear here, using the key found through frequency analysis."
                   class="w-full p-4 bg-green-50 border border-green-300 rounded-lg text-gray-700"></textarea>
@@ -187,6 +227,10 @@ ORDER BY
         <div id="resultOutput" class="p-6 bg-yellow-50 rounded-lg border border-yellow-200">
             <p class="text-gray-600">The analysis results (Language, Rotation, Similarity Details) will be displayed here.</p>
         </div>
+
+        <br>
+        <p>Frequencies distances are computed using the <b>chi-squared distribution</b>:</p>
+        <div style="text-align: center;">$$\chi^2 = \sum_{i=1}^{k} \frac{(O_i - E_i)^2}{E_i}$$</div>
         
         <hr class="my-10 border-t border-gray-200">
         
@@ -196,7 +240,63 @@ ORDER BY
 
     </div>
 
+    <!-- MESSAGGIO DI FEEDBACK COPIA (Fisso) -->
+    <div id="copyFeedback" class="bg-blue-600 text-white p-3 rounded-lg shadow-xl flex items-center space-x-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+        <span>Testo copiato negli appunti!</span>
+    </div>
+
     <!-- Link to the JavaScript file containing all the logic -->
     <script src="script.js"></script>
+
+        <!-- Libreria per icone (aggiunta per l'icona "Copia") -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Inizializza le icone lucide (copia, ecc.)
+        lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const copyButtons = document.querySelectorAll('.copy-btn');
+            const feedbackMessage = document.getElementById('copyFeedback');
+
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        // 1. Usa l'API standard per copiare il testo
+                        // Si usa document.execCommand('copy') come fallback/necessario in ambienti iFrame
+                        const textToCopy = targetElement.value;
+                        
+                        const tempInput = document.createElement('textarea');
+                        tempInput.value = textToCopy;
+                        document.body.appendChild(tempInput);
+                        tempInput.select();
+
+                        try {
+                            const successful = document.execCommand('copy');
+                            if (successful) {
+                                // Mostra feedback
+                                feedbackMessage.classList.add('show');
+                                setTimeout(() => {
+                                    feedbackMessage.classList.remove('show');
+                                }, 1500);
+                            }
+                        } catch (err) {
+                            console.error('Errore durante la copia del testo:', err);
+                            // Potresti aggiungere un feedback di errore qui
+                        } finally {
+                            document.body.removeChild(tempInput);
+                        }
+                    }
+                });
+            });
+
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body);
+            }
+        });
+    </script>
 </body>
 </html>

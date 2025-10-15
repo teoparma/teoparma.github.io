@@ -1,6 +1,6 @@
 const language_frequencies = [
     {
-        language: 'EN', // Inglese
+        language: 'EN', // English
         frequency: new Map([
             ['E', 12.70], ['T', 9.06], ['A', 8.17], ['O', 7.51], ['I', 6.97],
             ['N', 6.75], ['S', 6.33], ['H', 6.09], ['R', 5.99], ['D', 4.25],
@@ -11,7 +11,7 @@ const language_frequencies = [
         ])
     },
     {
-        language: 'IT', // Italiano
+        language: 'IT', // Italian
         frequency: new Map([
             ['E', 11.79], ['A', 11.75], ['I', 10.14], ['O', 9.83], ['N', 6.88],
             ['L', 6.51], ['R', 6.37], ['T', 5.62], ['S', 4.98], ['C', 4.50],
@@ -22,7 +22,7 @@ const language_frequencies = [
         ])
     },
     {
-        language: 'FR', // Francese
+        language: 'FR', // Franch
         frequency: new Map([
             ['E', 14.71], ['S', 7.95], ['A', 7.64], ['I', 7.53], ['T', 7.24],
             ['N', 7.10], ['R', 6.69], ['U', 6.31], ['O', 5.80], ['L', 5.46],
@@ -33,36 +33,37 @@ const language_frequencies = [
         ])
     },
     {
-        language: 'DE', // Tedesco
+        language: 'DE', // German
         frequency: new Map([
-            ['E', 15.99], ['N', 9.77], ['I', 7.00], ['S', 7.82], ['A', 6.51],
-            ['R', 7.00], ['T', 6.15], ['D', 5.08], ['H', 1.95], ['U', 4.34],
-            ['L', 3.43], ['C', 2.73], ['G', 3.00], ['M', 2.53], ['O', 2.59],
-            ['B', 1.89], ['W', 1.87], ['F', 1.69], ['K', 1.14], ['Z', 1.13],
-            ['P', 0.79], ['V', 0.84], ['J', 0.17], ['Y', 0.07], ['X', 0.04],
-            ['Q', 0.02]
+            ['E', 16.40], ['N', 9.78], ['S', 7.27], ['R', 7.00], ['I', 6.55],
+            ['A', 6.52], ['T', 6.15], ['D', 5.08], ['H', 4.48], ['U', 4.17],
+            ['L', 3.44], ['G', 3.00], ['C', 2.73], ['O', 2.59], ['M', 2.53],
+            ['W', 1.92], ['B', 1.89], ['F', 1.66], ['K', 1.42], ['Z', 1.13],
+            ['V', 0.85], ['P', 0.67], ['J', 0.27], ['Y', 0.039], ['X', 0.034],
+            ['Q', 0.018]
         ])
     },
     {
-        language: 'ES', // Spagnolo
+        language: 'ES', // Spanish
         frequency: new Map([
-            ['E', 13.58], ['A', 11.72], ['O', 8.68], ['L', 6.64], ['R', 6.77],
-            ['S', 7.98], ['I', 5.86], ['D', 4.67], ['U', 4.68], ['T', 4.40],
-            ['C', 3.87], ['M', 3.01], ['P', 2.51], ['B', 1.49], ['G', 1.01],
-            ['H', 0.70], ['F', 0.69], ['V', 1.05], ['J', 0.52], ['N', 0.31],
-            ['X', 0.11], ['Z', 0.47], ['Q', 0.88], ['Y', 1.09], ['K', 0.02],
-            ['W', 0.01]
+            ['E', 13.70], ['A', 11.53], ['O', 8.68], ['S', 7.98], ['R', 6.87],
+            ['N', 6.71], ['I', 6.25], ['D', 5.01], ['L', 4.97], ['T', 4.63],
+            ['C', 4.02], ['U', 3.93], ['M', 3.16], ['P', 2.51], ['B', 2.22],
+            ['H', 1.97], ['G', 1.77], ['Y', 1.43], ['V', 1.14], ['Q', 0.88],
+            ['F', 0.69], ['X', 0.52], ['J', 0.49], ['Z', 0.47], ['W', 0.027],
+            ['K', 0.026]
         ])
     },
     {
-        language: 'PT', // Portoghese
+        language: 'PT', // Portuguese
         frequency: new Map([
-            ['A', 14.63], ['E', 11.69], ['O', 10.64], ['S', 7.35], ['R', 6.73],
-            ['I', 6.18], ['N', 8.32], ['T', 5.06], ['M', 3.08], ['D', 5.01],
-            ['L', 5.00], ['P', 2.76], ['U', 4.63], ['C', 3.88], ['H', 0.92],
-            ['V', 1.67], ['G', 1.30], ['B', 1.04], ['F', 1.12], ['Q', 1.39],
-            ['Z', 0.23], ['J', 0.31], ['K', 0.01], ['W', 0.01], ['Y', 0.01],
-            ['X', 0.23]
+            ['A', 14.63], ['E', 13.10], ['O', 9.74], ['S', 6.81], ['R', 6.53],
+            ['I', 6.19], ['D', 4.99], ['M', 4.74], ['N', 4.45], ['T', 4.34],
+            ['C', 3.88], ['U', 3.64], ['L', 2.78], ['P', 2.52], ['V', 1.58],
+            ['G', 1.30], ['H', 1.28], ['Q', 1.20], ['B', 1.04], ['F', 1.02],
+            ['Z', 0.47], ['X', 0.45], ['J', 0.38], ['W', 0.037], ['K', 0.015], 
+            ['Y', 0.006],
+    
         ])
     }
 ];
@@ -145,19 +146,16 @@ function encrypt(plaintext, rot) {
         const charCode = char.toUpperCase().charCodeAt(0);
         
         if (charCode >= 'A'.charCodeAt(0) && charCode <= 'Z'.charCodeAt(0)) {
-            // Calcola la nuova posizione
+            // Compute new position
             let newCharCode = charCode - 'A'.charCodeAt(0);
             
-            // Applica la cifratura: (Indice + Rotazione) % 26
+            // Apply encryption: (index + rotation) % 26
             newCharCode = (newCharCode + rot) % ALPHABET_SIZE;
             
-            // Riconverte in carattere
             let newChar = String.fromCharCode(newCharCode + 'A'.charCodeAt(0));
             
-            // Mantieni la cassa originale
             ciphertext += (char === char.toUpperCase()) ? newChar : newChar.toLowerCase();
         } else {
-            // Mantiene spazi e punteggiatura
             ciphertext += char;
         }
     }
@@ -200,23 +198,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const decryptedOutput = document.getElementById('decryptedOutput');
     const encryptedOutput = document.getElementById('encryptedOutput');
 
-    // Funzione helper per visualizzare i messaggi nell'area di output
     function displayMessage(message, targetElement) {
         targetElement.innerHTML = message;
     }
     
-    // Funzione per validare la chiave (utilizzata sia in cifratura che decifratura manuale)
     function getValidKey() {
         const key = parseInt(keyInput.value, 10);
         if (isNaN(key) || key < 0 || key > 25) {
-            // Uso una div invece di alert() come richiesto dalle istruzioni
             displayMessage('<div style="color: red; padding: 10px;">Errore: La chiave deve essere un numero intero tra 0 e 25.</div>', resultOutput);
             return null;
         }
         return key;
     }
 
-    // Listener per il pulsante di CIFRATURA
     encryptButton.addEventListener('click', () => {
         const plaintext = plaintextInput.value;
         const rot = getValidKey();
@@ -229,66 +223,50 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        if (rot === null) return; // Errore già mostrato da getValidKey
+        if (rot === null) return;
 
-        // 1. Cifra il testo
         const encryptedText = encrypt(plaintext, rot);
         encryptedOutput.value = encryptedText;
-
-        // 2. Visualizzazione del risultato
-        /*displayMessage(`
-            <h2>Operazione Eseguita</h2>
-            <p><strong>Modalità:</strong> Cifratura (Encode)</p>
-            <p><strong>Chiave (Rotazione):</strong> <span style="font-size: 1.2em; color: #3B82F6;">${rot}</span></p>
-            <p>Testo cifrato generato con successo.</p>
-        `, resultOutput);*/
     });
 
 
-    // Listener per il pulsante di DECIFRATURA (Analisi)
     analyzeButton.addEventListener('click', () => {
         const ciphertext = ciphertextInput.value;
         
-        // Pulizia dell'output
         displayMessage('', resultOutput);
         decryptedOutput.value = '';
         
 
-        if (!ciphertext || ciphertext.trim().length < 2000) { // Aumenta il minimo per una buona analisi
+        if (!ciphertext || ciphertext.trim().length < 2000) {
             displayMessage('<div style="color: red; padding: 10px;">Inserisci un testo cifrato di almeno 2000 caratteri per un\'analisi accurata.</div>', resultOutput);
             return;
         }
 
-        // 1. Esegue l'analisi e la comparazione
         const analysisResult = frequency_analysis(ciphertext);
         const { rot, min_lang, distances, enc_frequency } = analysisResult;
         console.log(distances)
 
-        // Controlla se l'analisi ha trovato una rotazione
         if (rot === null) {
             displayMessage('<div style="color: orange; padding: 10px;">Impossibile eseguire l\'analisi. Il testo non contiene lettere valide.</div>', resultOutput);
             return;
         }
 
-        // 2. Decifra il testo
         const decryptedText = decrypt(ciphertext, rot);
         decryptedOutput.value = decryptedText;
 
-        // 3. Visualizzazione dei risultati
         let outputHTML = `
-            <h2>Risultati Analisi (Decifratura Automatica)</h2>
-            <p><strong>Lingua Rilevata:</strong> <span style="font-size: 1.2em; color: #10B981;">${min_lang}</span></p>
-            <p><strong>Chiave (Rotazione):</strong> <span style="font-size: 1.2em; color: #3B82F6;">${rot}</span></p>
+            <h2>Analysis Result (Decifratura Automatica)</h2>
+            <p><strong>Language detected:</strong> <span style="font-size: 1.2em; color: #10B981;">${min_lang}</span></p>
+            <p><strong>Rotation:</strong> <span style="font-size: 1.2em; color: #3B82F6;">${rot}</span></p>
             <hr class="my-3">
-            <h3>Distanze di Somiglianza (Minore è, Meglio è)</h3>
+            <h3>Measures of Similarity</h3>
             <table class="w-full text-left border-collapse mt-2 text-sm">
                 <thead>
-                    <tr><th class="py-2 px-4 border-b">Lingua</th><th class="py-2 px-4 border-b">Distanza \(\chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}\)</th></tr>
+                    <tr><th class="py-2 px-4 border-b">Lingua</th><th class="py-2 px-4 border-b">Distance</th></tr>
                 </thead>
                 <tbody>
         `;
         
-        // Ordina le distanze per mostrarle dalla più vicina alla più lontana
         const sortedDistances = Object.entries(distances).sort((a, b) => a[1] - b[1]);
         
 
