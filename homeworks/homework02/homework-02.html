@@ -87,9 +87,9 @@ GROUP BY
 	&lt;attribute&gt;</code></pre>
         
             <div class="flex justify-center flex-wrap my-5 space-x-2">
-                <img src="../images/height.png" alt="Distribuzione Univariata Altezza" class="w-full max-w-[calc(30%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
-                <img src="../images/eye_color.png" alt="Distribuzione Univariata Colore Occhi" class="w-full max-w-[calc(30%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
-                <img src="../images/hair_color.png" alt="Distribuzione Univariata Colore Capelli" class="w-full max-w-[calc(30%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
+                <img src="../images/height.png" class="w-full max-w-[calc(25%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
+                <img src="../images/eye_color.png" class="w-full max-w-[calc(25%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
+                <img src="../images/hair_color.png" class="w-full max-w-[calc(25%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
             </div>
         
         
@@ -110,92 +110,93 @@ ORDER BY
     &lt;attribute1&gt; ASC, frequency DESC</code></pre>
         
             <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin: 20px 0;">
-                <img src="../images/height-eye_color.png" alt="Distribuzione Bivariata Altezza e Colore Occhi" style="width: 30%; min-width: 150px; margin: 5px;">
-                <img src="../images/height-hair_color.png" alt="Distribuzione Bivariata Altezza e Colore Capelli" style="width: 30%; min-width: 150px; margin: 5px;">
-                <img src="../images/eye_color-hair_color.png" alt="Distribuzione Bivariata Colore Occhi e Colore Capelli" style="width: 30%; min-width: 150px; margin: 5px;">
+                <img src="../images/height-eye_color.png" style="width: 30%; min-width: 150px; margin: 5px;">
+                <img src="../images/height-hair_color.png" style="width: 30%; min-width: 150px; margin: 5px;">
+                <img src="../images/eye_color-hair_color.png" style="width: 30%; min-width: 150px; margin: 5px;">
             </div>
 
         </div>
         
         <!-- ########################################## -->
-        
+        <!-- CEASAR CIPHER -->
+        <div style="height: 100px;"></div>
         
         <h1 class="text-3xl font-bold text-gray-800 my-8 pt-4 border-t border-gray-400 text-orange-600">
-            Strumento Interattivo: Crittanalisi del Cifrario di Cesare
+            Ceasar Cipher Decryption Through Frequency Analysis
         </h1>
 
-        <!-- SEZIONE 4: FUNZIONALITÀ ACCESSORIA (CIFRATURA) -->
+        <!-- ENCRYPTION -->
         <h2 class="text-2xl font-bold text-gray-800 mb-4 text-blue-600">
-            Funzionalità Accessoria: Cifratura (Encode)
+            Optional Functionality: Encryption
         </h2>
 
-		<h2 class="text-xl font-semibold text-gray-700 mb-3">Inserisci il plaintext da cifrare</h2>
+		<h2 class="text-xl font-semibold text-gray-700 mb-3">Insert plaintext to encrypt</h2>
         <div class="mb-6">
             <textarea id="plaintextInput" rows="8" maxlength="5000" 
-                      placeholder="Incolla qui il testo cifrato. L'analisi di frequenza rileverà lingua e chiave (rotazione) automaticamente."
+                      placeholder="Paste the ciphertext here. Frequency analysis will automatically detect the language and key (rotation)."
                       class="w-full p-4 border border-gray-300 rounded-lg focus:border-orange-500"></textarea>
         </div>
         
-        <!-- Input Chiave per Cifratura -->
+        <!-- Encryption Key Input -->
         <div class="mb-5 flex items-center space-x-4">
             <label for="keyInput" class="text-base font-medium text-gray-700">
-                Chiave di Rotazione (0-25):
+                Encryption Key (0-25):
             </label>
             <input type="number" id="keyInput" min="0" max="25" value="3"
                    class="w-20 p-2 border border-blue-300 rounded-lg text-center focus:border-blue-500">
         </div>
         
-        <!-- Pulsante di CIFRATURA -->
+        <!-- ENCRYPT Button -->
         <button id="encryptButton" 
                 class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-150 transform hover:scale-[1.01]">
-            ✨ Cifra il Testo
+            ✨ Encrypt
         </button>
 
-        <!-- SEZIONE 2: RISULTATO (DECIFRATO) -->
+        <!-- ENCRYPTED TEXT RESUL -->
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Crypted text</h2>
         <textarea id="encryptedOutput" rows="8" readonly
-                  placeholder="Il testo cifrato apparirà qui, usando la chiave trovata tramite analisi di frequenza."
+                  placeholder="The encrypted text will appear here, using the key found through frequency analysis."
                   class="w-full p-4 bg-green-50 border border-green-300 rounded-lg text-gray-700"></textarea>
 
         <div style="height: 100px;"></div>
 
-        <!-- SEZIONE 1: INPUT PRINCIPALE (TESTO CIFRATO) -->
-        <h2 class="text-xl font-semibold text-gray-700 mb-3">1. Inserisci il Testo Cifrato da Analizzare</h2>
+        <!-- ENCRYPTED TEXT-->
+        <h2 class="text-xl font-semibold text-gray-700 mb-3">Enter the Ciphertext to Analyze</h2>
         <div class="mb-6">
             <textarea id="ciphertextInput" rows="8" maxlength="5000" 
-                      placeholder="Incolla qui il testo cifrato. L'analisi di frequenza rileverà lingua e chiave (rotazione) automaticamente."
+                      placeholder="Paste the ciphertext here. Frequency analysis will automatically detect the language and key (rotation)."
                       class="w-full p-4 border border-gray-300 rounded-lg focus:border-orange-500"></textarea>
         </div>
         
-        <!-- Pulsante principale di DECIFRATURA -->
+        <!-- DECRYPT Button -->
         <button id="analyzeButton" 
                 class="w-full sm:w-auto px-8 py-3 bg-orange-600 text-white font-bold rounded-lg shadow-md hover:bg-orange-700 transition duration-150 transform hover:scale-[1.01]">
-            🚀 Esegui Crittanalisi e Decifra
+            🚀 Run Frequency Analisys and Decrypt
         </button>
         
         <hr class="my-8 border-t border-gray-200">
 
-        <!-- SEZIONE 2: RISULTATO (DECIFRATO) -->
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">2. Testo Decifrato</h2>
+        <!--DECRYPTED TEXT Result -->
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Decryted Text</h2>
         <textarea id="decryptedOutput" rows="8" readonly
-                  placeholder="Il testo decifrato apparirà qui, usando la chiave trovata tramite analisi di frequenza."
+                  placeholder="The decrypted text will appear here, using the key found through frequency analysis."
                   class="w-full p-4 bg-green-50 border border-green-300 rounded-lg text-gray-700"></textarea>
 
-        <!-- SEZIONE 3: DETTAGLI ANALISI -->
-        <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4">3. Dettagli dell'Analisi</h2>
+        <!-- ANALYSIS DETAILS -->
+        <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Analysis Details</h2>
         <div id="resultOutput" class="p-6 bg-yellow-50 rounded-lg border border-yellow-200">
-            <p class="text-gray-600">I risultati dell'analisi (Lingua, Rotazione, Dettagli di somiglianza) appariranno qui.</p>
+            <p class="text-gray-600">The analysis results (Language, Rotation, Similarity Details) will be displayed here.</p>
         </div>
         
         <hr class="my-10 border-t border-gray-200">
         
         <p class="mt-8 text-sm text-gray-500 text-center">
-            Progetto realizzato in JavaScript per l'analisi statistica dei cifrari a sostituzione semplice.
+            Project developed in JavaScript for the statistical analysis of simple substitution ciphers.
         </p>
 
     </div>
 
-    <!-- Collegamento al file JavaScript contenente tutta la logica -->
+    <!-- Link to the JavaScript file containing all the logic -->
     <script src="script.js"></script>
 </body>
 </html>
