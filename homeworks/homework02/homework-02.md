@@ -65,4 +65,3 @@ ORDER BY
   ```
 
 <img src="../images/height-eye_color.png" width="30%" /> <img src="../images/height-hair_color.png" width="30%" /> <img src="../images/eye_color-hair_color.png" width="30%" />
-
