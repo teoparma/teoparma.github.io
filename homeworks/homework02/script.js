@@ -42,7 +42,7 @@ const language_frequencies = [
             ['V', 0.85], ['P', 0.67], ['J', 0.27], ['Y', 0.039], ['X', 0.034],
             ['Q', 0.018]
         ])
-    },
+    }/*,
     {
         language: 'ES', // Spanish
         frequency: new Map([
@@ -65,7 +65,7 @@ const language_frequencies = [
             ['Y', 0.006],
     
         ])
-    }
+    }*/
 ];
 
 function frequency_analysis(chipertext) {
