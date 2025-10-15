@@ -99,7 +99,7 @@ function frequency_analysis(chipertext) {
 
 function compair_frequencies(enc_frequency){
 
-    var distance = {}
+    var distances = {}
     var language, freq_map, i
 
     //compute distances
@@ -107,12 +107,12 @@ function compair_frequencies(enc_frequency){
         i=0
         language = lang.language
         freq_map = lang.frequency   
-        distance[language] = 0
+        distances[language] = 0
 
         //language frequencies are ordered yet
         for(const [_, value] of enc_frequency){
             exp_value = [...freq_map.entries()][i][1]
-            distance[language] += ((value - exp_value)**2)/exp_value
+            distances[language] += ((value - exp_value)**2)/exp_value
             i += 1
         }
 
@@ -120,7 +120,7 @@ function compair_frequencies(enc_frequency){
     }
 
     //take the language with the smallest distance from enc_frequency
-    const [min_lang, _] = Object.entries(distance).reduce((a, b) =>  a[1] < b[1] ? a : b )
+    const [min_lang, _] = Object.entries(distances).reduce((a, b) =>  a[1] < b[1] ? a : b )
     //console.log("Language detected: %s", min_lang)
 
     const language_map = language_frequencies.find(item => item.language === min_lang)
@@ -133,7 +133,7 @@ function compair_frequencies(enc_frequency){
     const rot = (firstLetter - secondLetter + 26) % 26
     //console.log("rotation: %d", rot)
 
-    return { rot, min_lang, distance, enc_frequency }
+    return { rot, min_lang, distances, enc_frequency }
 }
 
 function encrypt(plaintext, rot) {
@@ -254,14 +254,15 @@ document.addEventListener('DOMContentLoaded', () => {
         decryptedOutput.value = '';
         
 
-        if (!ciphertext || ciphertext.trim().length < 10) { // Aumenta il minimo per una buona analisi
-            displayMessage('<div style="color: red; padding: 10px;">Inserisci un testo cifrato di almeno 10 caratteri per un\'analisi accurata.</div>', resultOutput);
+        if (!ciphertext || ciphertext.trim().length < 2000) { // Aumenta il minimo per una buona analisi
+            displayMessage('<div style="color: red; padding: 10px;">Inserisci un testo cifrato di almeno 2000 caratteri per un\'analisi accurata.</div>', resultOutput);
             return;
         }
 
         // 1. Esegue l'analisi e la comparazione
         const analysisResult = frequency_analysis(ciphertext);
-        const { rot, min_lang, distances, enc_sorted_array } = analysisResult;
+        const { rot, min_lang, distances, enc_frequency } = analysisResult;
+        console.log(distances)
 
         // Controlla se l'analisi ha trovato una rotazione
         if (rot === null) {
@@ -282,18 +283,18 @@ document.addEventListener('DOMContentLoaded', () => {
             <h3>Distanze di Somiglianza (Minore è, Meglio è)</h3>
             <table class="w-full text-left border-collapse mt-2 text-sm">
                 <thead>
-                    <tr><th class="py-2 px-4 border-b">Lingua</th><th class="py-2 px-4 border-b">Distanza ($(\sum (f_{oss}-f_{att})^2)$)</th></tr>
+                    <tr><th class="py-2 px-4 border-b">Lingua</th><th class="py-2 px-4 border-b">Distanza \(\chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}\)</th></tr>
                 </thead>
                 <tbody>
         `;
         
         // Ordina le distanze per mostrarle dalla più vicina alla più lontana
-        /*const sortedDistances = Object.entries(distances).sort((a, b) => a[1] - b[1]);
+        const sortedDistances = Object.entries(distances).sort((a, b) => a[1] - b[1]);
         
 
         sortedDistances.forEach(([lang, dist]) => {
             outputHTML += `<tr><td class="py-1 px-4 border-b">${lang}</td><td class="py-1 px-4 border-b">${dist.toFixed(4)}</td></tr>`;
-        });*/
+        });
 
         outputHTML += `</tbody></table>`;
 

@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analizzatore Cifrario di Cesare | Homework #02</title>
-    <!-- Carica Tailwind CSS per lo styling -->
+    <!-- Load Tailwind CSS for the styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Stili CSS di base */
+        /*CSS Styles*/
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         body { 
             font-family: 'Inter', sans-serif; 
@@ -24,9 +24,8 @@
         textarea:focus { 
             outline: none; 
             box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.4); 
-        } /* Arancione per focus */
+        }
         
-        /* Stili per il contenuto importato */
         .markdown-container h1 { font-size: 2.5rem; font-weight: 700; margin-top: 1.5rem; }
         .markdown-container h2 { font-size: 2rem; font-weight: 600; margin-top: 2rem; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;}
         .markdown-container h3 { font-size: 1.5rem; font-weight: 600; margin-top: 1.5rem; }
@@ -87,10 +86,10 @@ FROM
 GROUP BY
 	&lt;attribute&gt;</code></pre>
         
-            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin: 20px 0;">
-                <img src="../images/height.png" alt="Distribuzione Univariata Altezza" style="width: 30%; min-width: 150px; margin: 5px;">
-                <img src="../images/eye_color.png" alt="Distribuzione Univariata Colore Occhi" style="width: 30%; min-width: 150px; margin: 5px;">
-                <img src="../images/hair_color.png" alt="Distribuzione Univariata Colore Capelli" style="width: 30%; min-width: 150px; margin: 5px;">
+            <div class="flex justify-center flex-wrap my-5 space-x-2">
+                <img src="../images/height.png" alt="Distribuzione Univariata Altezza" class="w-full max-w-[calc(30%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
+                <img src="../images/eye_color.png" alt="Distribuzione Univariata Colore Occhi" class="w-full max-w-[calc(30%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
+                <img src="../images/hair_color.png" alt="Distribuzione Univariata Colore Capelli" class="w-full max-w-[calc(30%-10px)] min-w-[150px] my-1.5 h-auto object-contain">
             </div>
         
         
@@ -119,44 +118,11 @@ ORDER BY
         </div>
         
         <!-- ########################################## -->
-        <!-- FINE SEZIONE CONTENUTO TEORICO -->
-        <!-- ########################################## -->
         
         
         <h1 class="text-3xl font-bold text-gray-800 my-8 pt-4 border-t border-gray-400 text-orange-600">
             Strumento Interattivo: Crittanalisi del Cifrario di Cesare
         </h1>
-
-
-        <!-- SEZIONE 1: INPUT PRINCIPALE (TESTO CIFRATO) -->
-        <h2 class="text-xl font-semibold text-gray-700 mb-3">1. Inserisci il Testo Cifrato da Analizzare</h2>
-        <div class="mb-6">
-            <textarea id="ciphertextInput" rows="8" maxlength="5000" 
-                      placeholder="Incolla qui il testo cifrato. L'analisi di frequenza rileverà lingua e chiave (rotazione) automaticamente."
-                      class="w-full p-4 border border-gray-300 rounded-lg focus:border-orange-500"></textarea>
-        </div>
-        
-        <!-- Pulsante principale di DECIFRATURA -->
-        <button id="analyzeButton" 
-                class="w-full sm:w-auto px-8 py-3 bg-orange-600 text-white font-bold rounded-lg shadow-md hover:bg-orange-700 transition duration-150 transform hover:scale-[1.01]">
-            🚀 Esegui Crittanalisi e Decifra
-        </button>
-        
-        <hr class="my-8 border-t border-gray-200">
-
-        <!-- SEZIONE 2: RISULTATO (DECIFRATO) -->
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">2. Testo Decifrato</h2>
-        <textarea id="decryptedOutput" rows="8" readonly
-                  placeholder="Il testo decifrato apparirà qui, usando la chiave trovata tramite analisi di frequenza."
-                  class="w-full p-4 bg-green-50 border border-green-300 rounded-lg text-gray-700"></textarea>
-
-        <!-- SEZIONE 3: DETTAGLI ANALISI -->
-        <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4">3. Dettagli dell'Analisi</h2>
-        <div id="resultOutput" class="p-6 bg-yellow-50 rounded-lg border border-yellow-200">
-            <p class="text-gray-600">I risultati dell'analisi (Lingua, Rotazione, Dettagli di somiglianza) appariranno qui.</p>
-        </div>
-        
-        <hr class="my-10 border-t border-gray-200">
 
         <!-- SEZIONE 4: FUNZIONALITÀ ACCESSORIA (CIFRATURA) -->
         <h2 class="text-2xl font-bold text-gray-800 mb-4 text-blue-600">
@@ -190,6 +156,38 @@ ORDER BY
         <textarea id="encryptedOutput" rows="8" readonly
                   placeholder="Il testo cifrato apparirà qui, usando la chiave trovata tramite analisi di frequenza."
                   class="w-full p-4 bg-green-50 border border-green-300 rounded-lg text-gray-700"></textarea>
+
+        <div style="height: 100px;"></div>
+
+        <!-- SEZIONE 1: INPUT PRINCIPALE (TESTO CIFRATO) -->
+        <h2 class="text-xl font-semibold text-gray-700 mb-3">1. Inserisci il Testo Cifrato da Analizzare</h2>
+        <div class="mb-6">
+            <textarea id="ciphertextInput" rows="8" maxlength="5000" 
+                      placeholder="Incolla qui il testo cifrato. L'analisi di frequenza rileverà lingua e chiave (rotazione) automaticamente."
+                      class="w-full p-4 border border-gray-300 rounded-lg focus:border-orange-500"></textarea>
+        </div>
+        
+        <!-- Pulsante principale di DECIFRATURA -->
+        <button id="analyzeButton" 
+                class="w-full sm:w-auto px-8 py-3 bg-orange-600 text-white font-bold rounded-lg shadow-md hover:bg-orange-700 transition duration-150 transform hover:scale-[1.01]">
+            🚀 Esegui Crittanalisi e Decifra
+        </button>
+        
+        <hr class="my-8 border-t border-gray-200">
+
+        <!-- SEZIONE 2: RISULTATO (DECIFRATO) -->
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">2. Testo Decifrato</h2>
+        <textarea id="decryptedOutput" rows="8" readonly
+                  placeholder="Il testo decifrato apparirà qui, usando la chiave trovata tramite analisi di frequenza."
+                  class="w-full p-4 bg-green-50 border border-green-300 rounded-lg text-gray-700"></textarea>
+
+        <!-- SEZIONE 3: DETTAGLI ANALISI -->
+        <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4">3. Dettagli dell'Analisi</h2>
+        <div id="resultOutput" class="p-6 bg-yellow-50 rounded-lg border border-yellow-200">
+            <p class="text-gray-600">I risultati dell'analisi (Lingua, Rotazione, Dettagli di somiglianza) appariranno qui.</p>
+        </div>
+        
+        <hr class="my-10 border-t border-gray-200">
         
         <p class="mt-8 text-sm text-gray-500 text-center">
             Progetto realizzato in JavaScript per l'analisi statistica dei cifrari a sostituzione semplice.
