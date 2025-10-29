@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework 4</title>
+    
+    <style>
+      body {
+        padding: 0; margin: 0; display: flex; flex-direction: column;
+        justify-content: center; align-items: center; min-height: 100vh;
+        background-color: #f0f0f0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+          Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      }
+      .controls {
+        margin: 20px 0;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        padding: 10px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      }
+      .controls div {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .controls label {
+        font-weight: 500;
+      }
+      .controls input {
+        width: 80px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      .controls button {
+        padding: 8px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .controls button:hover {
+        background-color: #0056b3;
+      }
+      canvas {
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+    </style>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.js"></script>
+
+  </head>
+  <body>
+    <h1>Law of Large Numbers Simulator</h1>
+    
+    <div class="controls">
+      <div>
+        <label for="m_input">Trajectories (m):</label>
+        <input type="number" id="m_input" value="1000">
+      </div>
+      <div>
+        <label for="p_input">Probability (p):</label>
+        <input type="number" id="p_input" value="0.5" step="0.01" min="0" max="1">
+      </div>
+      <div>
+        <label for="n_input">Rounds (maxN):</label>
+        <input type="number" id="n_input" value="100">
+      </div>
+      <button id="start_button">Start Simulation</button>
+    </div>
+    
+    <script src="script.js"></script>
+    </body>
+</html>

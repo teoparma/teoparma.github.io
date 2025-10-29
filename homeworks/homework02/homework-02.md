@@ -28,7 +28,7 @@ In **Inferential Satistics** a distribution rapresents all the possible values a
 
 Using MariaDB I've created a simple dataset containing the heights, the eye color and hair color of a group of people:
 
-![](../images/dataset.png)
+![](images/dataset.png)
 
 ### Univariate Distributions
 The following tables show the univariate distribution for each variable.
@@ -44,7 +44,7 @@ GROUP BY
 	<attribute>
 ```
 
-<img src="../images/height.png" width="30%" /> <img src="../images/eye_color.png" width="30%" /> <img src="../images/hair_color.png" width="30%" />
+<img src="images/height.png" width="30%" /> <img src="images/eye_color.png" width="30%" /> <img src="images/hair_color.png" width="30%" />
 
 ### Bivariate Distributions
 The following tables show the bivariate distribution for each couple of variables.
@@ -64,4 +64,4 @@ ORDER BY
     <attribute1> ASC, frequency DESC
   ```
 
-<img src="../images/height-eye_color.png" width="30%" /> <img src="../images/height-hair_color.png" width="30%" /> <img src="../images/eye_color-hair_color.png" width="30%" />
+<img src="images/height-eye_color.png" width="30%" /> <img src="images/height-hair_color.png" width="30%" /> <img src="images/eye_color-hair_color.png" width="30%" />
