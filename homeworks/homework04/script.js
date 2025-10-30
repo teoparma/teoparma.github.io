@@ -51,12 +51,12 @@ function startSimulation() {
 
     for (let n = 0; n < maxN; n++) {
         for (let i = 0; i < m; i++) {
-        let t = trajectories[i];
-        if (random() < p) { 
-            t.successes++;
-        }
-        let freq = t.successes / (n + 1); 
-        t.history.push(freq);
+            let t = trajectories[i];
+            if (random() < p) { 
+                t.successes++;
+            }
+            let freq = t.successes / (n + 1); 
+            t.history.push(freq);
         }
     }
 
@@ -101,9 +101,9 @@ function drawMainPlot() {
         beginShape();
         noFill();
         for (let n = 0; n < t.history.length; n++) {
-        let x = map(n, 0, maxN, 0, plotWidth);
-        let y = map(t.history[n], 0, 1, plotHeight, 0);
-        vertex(x, y);
+            let x = map(n, 0, maxN, 0, plotWidth);
+            let y = map(t.history[n], 0, 1, plotHeight, 0);
+            vertex(x, y);
         }
         endShape();
     }
