@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generatore di Distribuzioni</title>
+    <!-- Carica Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Usa un font pulito come Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div class="container max-w-5xl mx-auto p-4 md:p-8">
+        <header class="mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">Generatore di Distribuzioni Statistiche</h1>
+            <p class="text-gray-600 mt-1">Visualizza diverse distribuzioni di probabilità e le loro medie.</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Colonna Controlli -->
+            <aside class="md:col-span-1 bg-white p-6 rounded-lg shadow-md h-fit sticky top-8">
+                <div class="space-y-4">
+                    <div>
+                        <label for="dist-select" class="block text-sm font-medium text-gray-700">Tipo di Distribuzione</label>
+                        <select id="dist-select" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="normal">Normale</option>
+                            <option value="exponential">Esponenziale</option>
+                            <option value="lognormal">Log-Normale</option>
+                            <option value="cauchy">Cauchy (Code Pesanti)</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="sample-size" class="block text-sm font-medium text-gray-700">Dimensione Campione</label>
+                        <input type="number" id="sample-size" value="1000" min="100" max="100000" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <button id="generate-btn" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                        Genera e Disegna
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Colonna Principale (Canvas e Risultati) -->
+            <main class="md:col-span-2 space-y-6">
+                <!-- Canvas -->
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4" id="canvas-title">Visualizzazione</h2>
+                    <canvas id="histogram-canvas" class="w-full h-96 bg-gray-50 border border-gray-200 rounded-lg"></canvas>
+                </div>
+
+                <!-- Risultati -->
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Risultati Statistiche</h2>
+                    <pre id="stats-output" class="bg-gray-800 text-white font-mono text-sm p-4 rounded-lg overflow-x-auto">Seleziona i parametri e clicca "Genera"...</pre>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
