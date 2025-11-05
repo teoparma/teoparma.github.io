@@ -1,74 +1,476 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generatore di Distribuzioni</title>
-    <!-- Carica Tailwind CSS -->
+    <title>Distribution Generator</title>
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Usa un font pulito come Inter */
+        /* Use a clean font like Inter */
         body {
             font-family: 'Inter', sans-serif;
+        }
+        
+        /* Simple table styling for the inserted content */
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #e2e8f0; /* gray-200 */
+            margin-top: 1.5rem; /* my-6 */
+            margin-bottom: 1.5rem; /* my-6 */
+        }
+        .content-table th,
+        .content-table td {
+            border: 1px solid #e2e8f0; /* gray-200 */
+            padding: 0.75rem; /* p-3 */
+            text-align: left;
+            vertical-align: top;
+            font-size: 0.875rem; /* text-sm */
+        }
+        .content-table th {
+            background-color: #f8fafc; /* gray-50 */
+            font-weight: 600; /* font-semibold */
+        }
+        .content-table td {
+            line-height: 1.6;
+        }
+        /* Style for block-level math formulas in tables */
+        .content-table math[display= "block"] {
+            font-size: 1rem;
+            margin-top: 0.5rem;
         }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gray-100 font-sans">
 
-    <div class="container max-w-5xl mx-auto p-4 md:p-8">
-        <header class="mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">Generatore di Distribuzioni Statistiche</h1>
-            <p class="text-gray-600 mt-1">Visualizza diverse distribuzioni di probabilità e le loro medie.</p>
-        </header>
+<!-- --- NEW CONTENT FROM USER --- -->
+<div class="container max-w-5xl mx-auto p-4 md:p-8">
+    <div class="bg-white p-6 md:p-8 rounded-lg shadow-md mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Measures of Location</h2>
+        <p class="text-gray-700 leading-relaxed mb-4">
+            Averages, also called measures of central tendency or measures of location, summarize a
+            dataset with a single value that describes the center or typical score. They can be computed
+            in various methods: the most common, the Arithmetic Mean, is calculated by adding all the
+            numbers together and the dividing by the count of numbers; the Median (the middle value in
+            a sorted list) and the Mode (the most frequently occurring value) as well as Weighted
+            averages, Geometric and Harmonic.
+        </p>
+        <p class="text-gray-700 leading-relaxed">
+            Depending on the type of data and its distribution (e.g., the presence of outliers), different averages 
+            highlight different aspects of the phenomenon. This is why some prove to be more useful and representative 
+            than others for describing that dataset.
+        </p>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <!-- Colonna Controlli -->
-            <aside class="md:col-span-1 bg-white p-6 rounded-lg shadow-md h-fit sticky top-8">
-                <div class="space-y-4">
-                    <div>
-                        <label for="dist-select" class="block text-sm font-medium text-gray-700">Tipo di Distribuzione</label>
-                        <select id="dist-select" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="normal">Normale</option>
-                            <option value="exponential">Esponenziale</option>
-                            <option value="lognormal">Log-Normale</option>
-                            <option value="cauchy">Cauchy (Code Pesanti)</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label for="sample-size" class="block text-sm font-medium text-gray-700">Dimensione Campione</label>
-                        <input type="number" id="sample-size" value="1000" min="100" max="100000" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
+        <table class="content-table">
+            <thead>
+                <tr>
+                    <th>MEASURE</th>
+                    <th>DEFINITION</th>
+                    <th>BEST USED FOR</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Arithmetic Mean</td>
+                    <td><math display="block"><mover><mi>x</mi><mo>&OverBar;</mo></mover><mo>=</mo><mfrac><mrow><mo>&Sigma;</mo><mi>x</mi></mrow><mi>n</mi></mfrac></math></td>
+                    <td>Symmetric (Normal) Data and when all data points should contribute equally. It is sensitive to outliers.</td>
+                </tr>
+                <tr>
+                    <td>Median</td>
+                    <td>The middle value of an ordered dataset</td>
+                    <td>Skewed Data or Data with Outliers (e.g., housing prices, income). It is robust and unaffected by extreme values.</td>
+                </tr>
+                <tr>
+                    <td>Mode</td>
+                    <td>The most frequently occurring value or category.</td>
+                    <td>Categorical Data (e.g., favorite color, preferred car brand) or when the most typical value is needed.</td>
+                </tr>
+                <tr>
+                    <td>Geometric Mean</td>
+                    <td><math display="block"><mi>GM</mi><mo>=</mo><mroot><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>&middot;</mo><msub><mi>x</mi><mn>2</mn></msub><mo>&middot;</mo><mo>...</mo><mo>&middot;</mo><msub><mi>x</mi><mi>n</mi></msub></mrow><mi>n</mi></mroot></math></td>
+                    <td>Calculating the average rate of growth or proportional change, like investment returns or population growth rates.</td>
+                </tr>
+                <tr>
+                    <td>Harmonic Mean</td>
+                    <td><math display="block"><mi>HM</mi><mo>=</mo><mfrac><mi>n</mi><mrow><mo>&Sigma;</mo><mo>(</mo><mfrac><mn>1</mn><mi>x</mi></mfrac><mo>)</mo></mrow></mfrac></math></td>
+                    <td>Averaging rates of change (e.g., speed, fuel consumption) or values with a high concentration of small numbers.</td>
+                </tr>
+                <tr>
+                    <td>Weighted Mean</td>
+                    <td><math display="block"><mover><mi>x</mi><mo>&OverBar;</mo></mover><mo>=</mo><mfrac><mrow><mo>&Sigma;</mo><mo>(</mo><mi>x</mi><mo>&middot;</mo><mi>w</mi><mo>)</mo></mrow><mrow><mo>&Sigma;</mo><mi>w</mi></mrow></mfrac></math></td>
+                    <td>Calculating an average when some values contribute more importance than others (e.g., GPA or stock indexes).</td>
+                </tr>
+            </tbody>
+        </table>
 
-                    <button id="generate-btn" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
-                        Genera e Disegna
-                    </button>
-                </div>
-            </aside>
+        <h2 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Measures of Dispersion</h2>
+        <p class="text-gray-700 leading-relaxed mb-4">
+            Measures of Dispersion, also called measures of variability or measures of spread,
+            summarize a dataset with a single value that describes how spread out or scattered the data
+            points are. They are a vital complement to measures of central tendency, as they indicate
+            the "risk" or "uncertainty" in the data.
+        </p>
+        <p class="text-gray-700 leading-relaxed">
+            They can be computed in various methods: the simplest, the Range, is calculated by
+            subtracting the minimum value from the maximum value. More robust and common
+            measures include the Quartile Deviation (the spread of the middle 50% of data), the
+            Variance (the average of squared deviations from the mean), the Standard Deviation (the
+            square root of the variance), and the Mean Deviation (the average of absolute deviations
+            from the mean).
+        </p>
+        <p class="text-gray-700 leading-relaxed">
+            The choice of which measure of dispersion to use depends entirely on the type of data you
+            have (scale of measurement) and the shape of its distribution (especially its sensitivity to
+            outliers).
+        </p>
 
-            <!-- Colonna Principale (Canvas e Risultati) -->
-            <main class="md:col-span-2 space-y-6">
-                <!-- Canvas -->
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4" id="canvas-title">Visualizzazione</h2>
-                    <canvas id="histogram-canvas" class="w-full h-96 bg-gray-50 border border-gray-200 rounded-lg"></canvas>
-                </div>
+        <table class="content-table">
+            <thead>
+                <tr>
+                    <th>MEASURE</th>
+                    <th>DEFINITION</th>
+                    <th>BEST USED FOR</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Range</td>
+                    <td>The difference between the maximum and minimum values in a dataset.</td>
+                    <td>A quick, simple-to-calculate measure of total spread. Highly sensitive to outliers.</td>
+                </tr>
+                <tr>
+                    <td>Quartile<br> Deviation<br> (QD)</td>
+                    <td>Half the difference between the 75th percentile (Q3) and the 25th percentile (Q1).
+                        <math display="block">
+                            <mi>QD</mi>
+                            <mo>=</mo>
+                            <mfrac>
+                                <mrow>
+                                    <mo>(</mo>
+                                    <mi>Q3</mi>
+                                    <mo>&minus;</mo>
+                                    <mi>Q1</mi>
+                                    <mo>)</mo>
+                                </mrow>
+                                <mn>2</mn>
+                            </mfrac>
+                        </math>
+                        Also called the semi-interquartile range.
+                    </td>
+                    <td>Skewed Data or Data with Outliers. It is robust and unaffected by extreme values. It measures the spread of the central 50% of the data.</td>
+                </tr>
+                <tr>
+                    <td>Variance</td>
+                    <td>
+                        <math display="block">
+                            <msup><mi>&sigma;</mi><mn>2</mn></msup>
+                            <mo>=</mo>
+                            <mfrac>
+                                <mrow>
+                                    <mo>&Sigma;</mo>
+                                    <msup>
+                                        <mrow><mo>(</mo><mi>x</mi><mo>&minus;</mo><mover><mi>x</mi><mo>&OverBar;</mo></mover><mo>)</mo></mrow>
+                                        <mn>2</mn>
+                                    </msup>
+                                </mrow>
+                                <mi>N</mi>
+                            </mfrac>
+                        </math>
+                    </td>
+                    <td>Symmetric (Normal) Data. It forms the basis for many statistical tests (e.g., ANOVA). Sensitive to outliers.</td>
+                </tr>
+                <tr>
+                    <td>Standard<br> Deviation<br> (SD)</td>
+                    <td>
+                        <math display="block">
+                            <mi>&sigma;</mi>
+                            <mo>=</mo>
+                            <msqrt>
+                                <mfrac>
+                                    <mrow>
+                                        <mo>&Sigma;</mo>
+                                        <msup>
+                                            <mrow><mo>(</mo><mi>x</mi><mo>&minus;</mo><mover><mi>x</mi><mo>&OverBar;</mo></mover><mo>)</mo></mrow>
+                                            <mn>2</mn>
+                                        </msup>
+                                </mrow>
+                                <mi>N</mi>
+                            </mfrac>
+                            </msqrt>
+                        </math>
+                    </td>
+                    <td>Symmetric (Normal) Data. It is the most common measure of spread as it is in the same units as the original data. Sensitive to outliers.</td>
+                </tr>
+                <tr>
+                    <td>Mean<br> Deviation<br> (MD)</td>
+                    <td>
+                        <math display="block">
+                            <mi>MD</mi>
+                            <mo>=</mo>
+                            <mfrac>
+                                <mrow>
+                                    <mo>&Sigma;</mo>
+                                    <mo>|</mo>
+                                    <mi>x</mi><mo>&minus;</mo><mover><mi>x</mi><mo>&OverBar;</mo></mover><mo>
+                                    <mo>|</mo>
+                                </mrow>
+                                <mi>N</mi>
+                            </mfrac>
+                        </math>
+                    </td>
+                    <td>An alternative to SD when you want to lessen (but not remove) the impact of outliers. It is less commonly used in formal statistics than SD.</td>
+                </tr>
+            </tbody>
+        </table>
+            <h2 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Statistical Distributions</h2>
+            <p class="text-gray-700 leading-relaxed mb-6">
+                Let's see how the different ways to calculate location and dispersion relate with different
+                distributions. First a quick explanation of various kinds of distributions.
+            </p>
 
-                <!-- Risultati -->
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Risultati Statistiche</h2>
-                    <pre id="stats-output" class="bg-gray-800 text-white font-mono text-sm p-4 rounded-lg overflow-x-auto">Seleziona i parametri e clicca "Genera"...</pre>
-                </div>
-            </main>
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">Exponential Distribution</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                The exponential distribution is a right-skewed distribution used primarily to model the
+                waiting time until a specific event occurs in a process where events happen continuously
+                and independently at a constant average rate.
+            </p>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                It is defined only for positive real numbers and its probability density function starts high at
+                x=0 and then decays exponentially as x increases.
+            </p>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                <strong>Key Property: Memoryless:</strong> This is its most distinctive feature. It means that the
+                probability of an event happening in the future is independent of how much time has
+                already passed.
+            </p>
+            <p class="text-gray-700 leading-relaxed mb-4"><strong>Applications:</strong></p>
+            <ul class="list-disc list-inside text-gray-700 leading-relaxed mb-4 pl-4">
+                <li>Time between customer arrivals at a service desk.</li>
+                <li>Time until a component or machine failure (reliability engineering).</li>
+                <li>Time between radioactive decays.</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Cauchy Distribution</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                Also known as the Lorentz distribution, the Cauchy distribution is a symmetric, bell-shaped
+                distribution, but it's infamous in statistics for its extreme properties. It is characterized by
+                having heavy tails, meaning extreme values (outliers) occur much more frequently than in a
+                Normal distribution.
+            </p>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                <strong>Key Property:</strong> The most significant characteristic is that its mean, variance, and all
+                higher moments are undefined (they mathematically diverge to infinity). This is due to
+                its heavy tails.
+            </p>
+            <p class="text-gray-700 leading-relaxed mb-4"><strong>Applications:</strong></p>
+            <ul class="list-disc list-inside text-gray-700 leading-relaxed mb-4 pl-4">
+                <li>Modeling physical phenomena like the resonance energy in spectroscopy
+                (known as the Breit-Wigner distribution in physics).</li>
+                <li>Modeling data with frequent and significant outliers (robust statistics).</li>
+                <li>It is the distribution of the ratio of two independent standard normal random
+                variables.</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Normal Distribution</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                The Normal distribution, or Gaussian distribution (often called the "bell curve"), is the most
+                widely used and important distribution in statistics due to the Central Limit Theorem: It is
+                perfectly symmetric and bell-shaped, with a range over all real numbers.
+            </p>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                <strong>Key Property:</strong> The CLT states that the distribution of sample means (or sums) from
+                any distribution will approach a Normal distribution as the sample size increases.
+            </p>
+            <p class="text-gray-700 leading-relaxed mb-4"><strong>Applications:</strong></p>
+            <ul class="list-disc list-inside text-gray-700 leading-relaxed mb-4 pl-4">
+                <li>Modeling natural phenomena that result from the sum of many small,
+                independent effects (e.g., human height, measurement errors, test scores).</li>
+                <li>The foundation for much of inferential statistics (confidence intervals,
+                hypothesis testing).</li>
+                <li>Approximating other distributions (like Binomial or Poisson) under certain
+                conditions.</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Log-Normal Distribution</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                The Log-Normal distribution is a continuous distribution for a random variable whose
+                logarithm is normally distributed. It is defined only for positive real numbers and is
+                right-skewed. It is used for quantities that cannot be negative and that tend to grow
+                multiplicatively.
+            </p>
+            <p class="text-gray-700 leading-relaxed mb-4"><strong>Applications:</strong></p>
+            <ul class="list-disc list-inside text-gray-700 leading-relaxed mb-4 pl-4">
+                <li>Finance: Modeling stock prices, as prices cannot fall below zero and tend to
+                grow exponentially.</li>
+                <li>Modeling sizes: such as the size of organisms, income distribution, or particle
+                sizes.</li>
+                <li>Failure times in reliability analysis where the failure rate is not constant.</li>
+            </ul>
+
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>AVERAGE</th>
+                        <th>NORMAL DISTRIBUTION</th>
+                        <th>EXPONENTIAL DISTRIBUTION</th>
+                        <th>LOG-NORMAL DISTRIBUTION</th>
+                        <th>CAUCHY DISTRIBUTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mean<br> (expected<br> value)</td>
+                        <td>The center of the bell curve. Equal to the Median and Mode.</td>
+                        <td>The expected waiting time. This is the reciprocal of the rate parameter.</td>
+                        <td>The highest value of the three measures, pulled right by the skew.</td>
+                        <td><strong>Undefined.</strong> The distribution is too heavy-tailed for the standard average to exist.</td>
+                    </tr>
+                    <tr>
+                        <td>Median<br> (50th<br> percentile)</td>
+                        <td>Equal to the Mean and Mode. Splits the symmetrical data exactly in half.</td>
+                        <td>Less than the Mean. It is the point where 50% of events have occurred.</td>
+                        <td>The preferred measure of center. The value where 50% of the log transformed data is less than it.</td>
+                        <td>The <strong>only reliable</strong> measure of center; it is equal to the location parameter.</td>
+                    </tr>
+                    <tr>
+                        <td>Mode (peak<br> value)</td>
+                        <td>Equal to Mean Median. point of hig probability.</td>
+                        <td>Zero (0). event is al most likel ha immediately.</td>
+                        <td>The lowest v of the t measu Represents most freq outcome.</td>
+                        <td>Equal to Median. peak of heavy-ta curve.</td>
+                    </tr>
+                    <tr>
+                        <td>Geometric<br> mean</td>
+                        <td>Equal to the Arithmetic Mean for positive Normal data.</td>
+                        <td>Less than the Arithmetic Mean. Used to average event rates.</td>
+                        <td><strong>Highly Relevant.</strong> The Log-Normal is defined such that its logarithm is Normally distributed; the geometric mean of the Log-Normal is the Mean of the Log-transformed data.</td>
+                        <td>Not defined due to the distribution's heavy tails.</td>
+                    </tr>
+                    <tr>
+                        <td>Harmonic<br> mean</td>
+                        <td>Equal to the Arithmetic Mean for data with low variance.</td>
+                        <td>Often used to represent the average event rate itself rather than the average time.</td>
+                        <td>Less than the Geometric Mean and the Arithmetic Mean, giving more weight to smaller outcomes.</td>
+                        <td>Not defined due to the distribution's heavy tails.</td>
+                    </tr>
+                    <tr>
+                        <td>Weighted<br> mean</td>
+                        <td>If weights are frequencies, the Weighted Mean is the Arithmetic Mean.</td>
+                        <td>Used if different time intervals or trials are assigned different levels of importance (weights).</td>
+                        <td>Used if different categories of the log-normally distributed variable are assigned different importance<br> (weights).</td>
+                        <td>Not relevant.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>MEASURE</th>
+                        <th>NORMAL DISTRIBUTION</th>
+                        <th>EXPONENTIAL DISTRIBUTION</th>
+                        <th>LOG-NORMAL DISTRIBUTION</th>
+                        <th>CAUCHY DISTRIBUTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Range<br> (Theoretical)</td>
+                        <td><b>Undefined:</b><br> Infinite (<math><mo>[</mo><mo>&minus;</mo><mi>&infin;</mi><mo>,</mo><mi>&infin;</mi><mo>]</mo></math>). The tails extend forever.</td>
+                        <td><b>Undefined:</b><br> Infinite (<math><mo>[</mo><mn>0</mn><mo>,</mo><mi>&infin;</mi><mo>]</mo></math>). The tail extends to the right.</td>
+                        <td><b>Undefined:</b><br> Infinite (<math><mo>[</mo><mn>0</mn><mo>,</mo><mi>&infin;</mi><mo>]</mo></math>). The tail extends to the right.</td>
+                        <td><b>Undefined:</b><br> Infinite (<math><mo>[</mo><mo>&minus;</mo><mi>&infin;</mi><mo>,</mo><mi>&infin;</mi><mo>]</mo></math>). The tails extend forever.</td>
+                    </tr>
+                    <tr>
+                        <td>Variance</td>
+                        <td>It is the <math><msup><mi>&sigma;</mi><mn>2</mn></msup></math> parameter, the primary measure of spread for this distribution.</td>
+                        <td>If the mean is <math><mn>1</mn><mo>/</mo><mi>&lambda;</mi></math>, the variance is <math><mn>1</mn><mo>/</mo><msup><mi>&lambda;</mi><mn>2</mn></msup></math>.</td>
+                        <td>It is complex to calculate and<br> highly sensitive to the distribution's skew.</td>
+                        <td><strong>Undefined:</strong><br> The "heavy tails" cause the integral for variance to diverge to infinity.</td>
+                    </tr>
+                    <tr>
+                        <td>Standard<br> Deviation<br> (SD)</td>
+                        <td>It is the <math><mi>&sigma;</mi></math> parameter, the square root of the variance.</td>
+                        <td>It is <math><mn>1</mn><mo>/</mo><mi>&lambda;</mi></math>, which is equal to the mean for an exponential distribution.</td>
+                        <td>The square root of the (complex) variance.</td>
+                        <td><strong>Undefined:</strong><br> Because the variance is undefined.</td>
+                    </tr>
+                    <tr>
+                        <td>Mean<br> Deviation<br> (MD)</td>
+                        <td>A robust alternative to the Standard Deviation.</td>
+                        <td>A robust measure of spread.</td>
+                        <td>A robust measure of spread, though less common.</td>
+                        <td><strong>Undefined:</strong><br> Like the mean and variance, the integral for MD also diverges.</td>
+                    </tr>
+                    <tr>
+                        <td>Quartile<br> Deviation<br> (QD)</td>
+                        <td>A robust measure of spread.</td>
+                        <td>A robust measure of spread. <math display="block"><mi>QD</mi><mo>=</mo><mfrac><mrow><mo>(</mo><mtext>Mean</mtext><mo>)</mo><mo>&times;</mo><mi>ln</mi><mo>(</mo><mn>3</mn><mo>)</mo></mrow><mn>2</mn></mfrac></math>.</td>
+                        <td>The preferred robust measure of spread (along<br> with IQR) due to the distribution's skew.</td>
+                        <td>This is the <strong>only reliable</strong>, finite measure of spread. It is equal to the scale parameter <math><mi>&gamma;</mi></math>.</td>
+                    </tr>
+                </tbody>
+            </table>
 
         </div>
     </div>
+    <!-- --- END OF NEW CONTENT --- -->
+
+    <!-- Distribution Generator Section -->
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+        <h1 class="text-3xl font-bold mb-6 text-gray-900">Statistical Distribution Generator</h1>
+
+        <!-- Controls -->
+        <div class="flex flex-wrap gap-4 mb-6 items-center">
+            <div>
+                <label for="distribution" class="block text-sm font-medium text-gray-700">Distribution:</label>
+                <select id="distribution" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm">
+                    <option value="normal">Normal</option>
+                    <option value="exponential">Exponential</option>
+                    <option value="lognormal">Log-Normal</option>
+                    <option value="cauchy">Cauchy</option>
+                </select>
+            </div>
+            <div>
+                <label for="sampleSize" class="block text-sm font-medium text-gray-700">Sample Size:</label>
+                <input type="number" id="sampleSize" value="50000" class="mt-1 block w-full pl-3 pr-3 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm">
+            </div>
+            <button id="generateBtn" class="mt-6 bg-indigo-600 text-white px-5 py-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Generate
+            </button>
+        </div>
+
+        <!-- Canvas for Histogram -->
+        <div class="mb-6">
+            <canvas id="histogramCanvas" class="w-full h-96 bg-gray-100 rounded-md border border-gray-300"></canvas>
+        </div>
+
+        <!-- Statistical Results -->
+        <div>
+            <h2 class="text-2xl font-semibold mb-4 text-gray-900">Statistical Results</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Column 1: Values -->
+                <div classs="bg-gray-50 p-4 rounded-lg border">
+                    <h3 class="text-lg font-semibold mb-3 text-indigo-700">Central Tendency</h3>
+                    <pre id="stats-values-central" class="text-sm font-mono bg-white p-3 rounded overflow-x-auto"></pre>
+                    
+                    <h3 class="text-lg font-semibold mb-3 mt-4 text-indigo-700">Dispersion</h3>
+                    <pre id="stats-values-dispersion" class="text-sm font-mono bg-white p-3 rounded overflow-x-auto"></pre>
+                </div>
+                <!-- Column 2: Commentary -->
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h3 class="text-lg font-semibold mb-3 text-blue-800">Interpretation & Commentary</h3>
+                    <p id="stats-commentary" class="text-sm text-gray-700"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
     <script src="script.js"></script>
 </body>
 </html>
-
