@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Statistics: Mean and Variance</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f8f9fa;
+            color: #212529;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+        }
+        h1, h2, h3 {
+            color: #343a40;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 5px;
+        }
+        h1 {
+            font-size: 2.2em;
+        }
+        h2 {
+            font-size: 1.8em;
+            margin-top: 1.5em;
+        }
+        h3 {
+            font-size: 1.4em;
+            margin-top: 1.2em;
+            border-bottom: none;
+        }
+        pre {
+            background-color: #ffffff;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 15px;
+            overflow-x: auto;
+            font-size: 0.95em;
+        }
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        }
+        pre code {
+            display: block; /* Makes the code block fill the <pre> */
+        }
+        /* Inline code */
+        :not(pre) > code {
+            background-color: #e9ecef;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        ol {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        strong {
+            color: #495057;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #dee2e6;
+            margin: 2em 0;
+        }
+        
+        /* --- Stili per il Calcolatore Interattivo --- */
+        .calculator-ui {
+            background-color: #ffffff;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        .input-group input[type="number"] {
+            font-size: 1.1em;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            flex-grow: 1; /* L'input occupa lo spazio rimanente */
+            max-width: 250px;
+        }
+        .input-group button {
+            font-size: 1.1em;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .input-group button#addButton {
+            background-color: #007bff;
+            color: white;
+        }
+        .input-group button#addButton:hover {
+            background-color: #0056b3;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        .button-group button#resetButton {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 15px;
+        }
+        .button-group button#resetButton:hover {
+            background-color: #5a6268;
+        }
+
+        #errorMessage {
+            color: #dc3545;
+            font-weight: 500;
+            margin-top: 10px;
+            display: none; /* Nascosto di default */
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 12px 15px;
+            margin-top: 20px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .results-grid span:nth-child(odd) {
+            font-weight: bold;
+            text-align: right;
+            color: #495057;
+        }
+        .results-grid span:nth-child(even) {
+            font-family: "SFMono-Regular", Consolas, monospace;
+            font-size: 1.1em;
+            background: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            min-width: 150px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ced4da;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        .comparison-table th {
+            background-color: #f8f9fa;
+        }
+        .comparison-table td:nth-child(2), .comparison-table td:nth-child(3) {
+            font-family: "SFMono-Regular", Consolas, monospace;
+        }
+
+        /* Stile aggiunto per MathML */
+        math {
+            font-size: 1.15em;
+            vertical-align: -0.1em;
+            padding: 0 3px;
+        }
+        pre math {
+            font-size: 1.5em; /* Mantiene le formule nei blocchi <pre> della stessa dimensione */
+            vertical-align: baseline;
+            padding: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Online Statistics: Mean and Variance - Derivation and Implementation</h1>
+    <p style="text-align: justify;">
+        Calculating the mean and variance in a running data stream is a fundamental task in statistics and data analysis. 
+        These metrics provide insights into the central tendency and variability of data, respectively. Unlike static datasets, a 
+        running stream of data continuously updates, requiring efficient algorithms to compute these statistics in real time.
+    </p>
+    <h3>What is a Running Stream?</h3>  
+    <p style="text-align: justify;">A running stream refers to a continuous flow of data where new data points are constantly being added. Traditional methods 
+        of calculating mean and variance involve storing the entire dataset in memory, which is impractical for large or infinite streams. 
+        Instead, we use incremental algorithms that update the mean and variance with each new data point.
+    </p>  
+
+    <h3>Applications in Engineering</h3>
+        <h4>Real-Time Data Analysis</h4>
+        <p style="text-align: justify;">
+            In engineering, real-time data analysis is crucial for monitoring and controlling processes. 
+            For example, in manufacturing, sensors collect data on machine performance, and calculating 
+            the mean and variance of this data helps identify deviations from normal operations. 
+        </p>
+        <h4>Network Traffic Monitoring</h4>
+        <p style="text-align: justify;">
+            Engineers use running mean and variance calculations to monitor network traffic. By analyzing the 
+            variability in data packets, they can detect anomalies, optimize performance, and enhance security.
+        </p>
+        <h4>Environmental Monitoring</h4>
+        <p style="text-align: justify;">
+            Environmental engineers collect data from various sensors to monitor parameters like temperature, humidity, 
+            and pollution levels. Running calculations of mean and variance allow them to analyze trends and detect 
+            abnormal conditions promptly.
+        </p>
+    <hr>
+
+    <h2>📈 Derivations of Recurrence Relations</h2>
+
+    <h3>1. Arithmetic Mean</h3>
+    <p><strong>Goal:</strong> Find a formula for the new mean <math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub></math> using the previous mean <math><msub><mover><mi>x</mi><mo>&OverBar;</mo><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></math> and the new data point <math><msub><mi>x</mi><mi>n</mi></msub></math>.</p>
+    
+    <p><strong>Definitions:</strong></p>
+    <pre><math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>x</mi><mi>i</mi></msub></math></pre>
+    <pre><math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>=</mo><mfrac><mn>1</mn><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></mfrac><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></munderover><msub><mi>x</mi><mi>i</mi></msub></math></pre>
+
+    <p><strong>Derivation:</strong></p>
+    <ol>
+        <li>Start with the definition of <math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub></math> and separate the <math><mi>n</mi></math>-th term:
+            <pre><math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><mrow><mo>(</mo><mrow><mo>(</mo><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></munderover><msub><mi>x</mi><mi>i</mi></msub><mo>)</mo></mrow><mo>+</mo><msub><mi>x</mi><mi>n</mi></msub><mo>)</mo></mrow></math></pre>
+        </li>
+        <li>From the definition of <math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></math>, we know that <math><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></munderover><msub><mi>x</mi><mi>i</mi></msub><mo>=</mo><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo></mrow><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></math>. Substitute this in:
+            <pre><math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><mrow><mo>(</mo><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo></mrow><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>x</mi><mi>n</mi></msub><mo>)</mo></mrow></math></pre>
+        </li>
+        <li>Distribute the <math><mfrac><mn>1</mn><mi>n</mi></mfrac></math> and rearrange terms:
+            <pre><math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>=</mo><mfrac><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow><mi>n</mi></mfrac><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><msub><mi>x</mi><mi>n</mi></msub></math></pre>
+            <pre><math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>=</mo><mfrac><mi>n</mi><mi>n</mi></mfrac><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>-</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><msub><mi>x</mi><mi>n</mi></msub></math></pre>
+            <pre><math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>=</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow></math></pre>
+        </li>
+    </ol>
+
+    <p><strong>Recurrence Relation (Mean):</strong></p>
+    <p>The new mean is the old mean plus a correction term, which is the difference between the new value and the old mean, scaled by <math><mfrac><mn>1</mn><mi>n</mi></mfrac></math>.</p>
+    <pre><math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>=</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mfrac><mrow><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></mrow><mi>n</mi></mfrac></math></pre>
+
+    <hr style="width:50%; margin-left:0;">
+
+    <h3>2. Variance (Welford's Algorithm)</h3>
+    <p><strong>Goal:</strong> Find a recurrence relation for the variance. Instead, we update the <strong>sum of squared differences from the mean</strong>, <math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub></math>.</p>
+
+    <p><strong>Definitions:</strong></p>
+    <pre><math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mo>=</mo><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>)</mo></mrow><mn>2</mn></msup></math></pre>
+    <pre><math><msubsup><mi>s</mi><mi>n</mi><mn>2</mn></msubsup><mo>=</mo><mfrac><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></mfrac></math></pre>
+    <p>From mean derivation, we know <math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>=</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mfrac><mi>&delta;</mi><mi>n</mi></mfrac></math></p>
+    <p>where <math><mi>&delta;</mi><mo>=</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></math></p>
+
+    <!-- *** INIZIO SEZIONE CORRETTA *** -->
+    <p><strong>Derivation:</strong></p>
+    <ol>
+        <li>Start with the definition of <math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub></math> and separate the <math><mi>n</mi></math>-th term:
+            <pre><math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mo>=</mo><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></munderover><msup><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>)</mo></mrow><mn>2</mn></msup></math></pre>
+        </li>
+        <li>This is hard because <math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub></math> is inside the summation. We relate <math><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>)</mo></mrow></math> to <math><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow></math>:
+            <pre><math><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>=</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><mrow><mo>(</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mfrac><mi>&delta;</mi><mi>n</mi></mfrac><mo>)</mo></mrow><mo>=</mo><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow><mo>-</mo><mfrac><mi>&delta;</mi><mi>n</mi></mfrac></math></pre>
+        </li>
+        <li>Substitute this into the summation term:
+            <pre><math><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></munderover><msup><mrow><mo>(</mo><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow><mo>-</mo><mfrac><mi>&delta;</mi><mi>n</mi></mfrac><mo>)</mo></mrow><mn>2</mn></msup></math></pre>
+        </li>
+        <li>Expand the square:
+            <pre><math><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></munderover><mrow><mo>(</mo><msup><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow><mn>2</mn></msup><mo>-</mo><mfrac><mrow><mn>2</mn><mi>&delta;</mi></mrow><mi>n</mi></mfrac><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow><mo>+</mo><msup><mrow><mo>(</mo><mfrac><mi>&delta;</mi><mi>n</mi></mfrac><mo>)</mo></mrow><mn>2</mn></msup><mo>)</mo></mrow></math></pre>
+        </li>
+        <li>Distribute the summation:
+            <pre><math><mrow><mo>(</mo><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></munderover><msup><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow><mn>2</mn></msup><mo>)</mo></mrow><mo>-</mo><mfrac><mrow><mn>2</mn><mi>&delta;</mi></mrow><mi>n</mi></mfrac><mrow><mo>(</mo><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></munderover><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow><mo>)</mo></mrow><mo>+</mo><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></munderover><msup><mrow><mo>(</mo><mfrac><mi>&delta;</mi><mi>n</mi></mfrac><mo>)</mo></mrow><mn>2</mn></msup></math></pre>
+        </li>
+        <li>Analyze each of these three terms:
+            <ul>
+                <li><strong>Term 1:</strong> This is simply the definition of <math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></math>.</li>
+                <li><strong>Term 2:</strong> The sum <math><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></munderover><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow></math> is <strong>zero</strong> (by the definition of the mean).</li>
+                <li><strong>Term 3:</strong> This is a constant added <math><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo></mrow></math> times: <math><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo></mrow><mfrac><msup><mi>&delta;</mi><mn>2</mn></msup><msup><mi>n</mi><mn>2</mn></msup></mfrac></math>.</li>
+            </ul>
+        </li>
+        <li>So, the summation part is: <math><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></munderover><msup><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>)</mo></mrow><mn>2</mn></msup><mo>=</mo><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo></mrow><mfrac><msup><mi>&delta;</mi><mn>2</mn></msup><msup><mi>n</mi><mn>2</mn></msup></mfrac></math>.</li>
+        <li>
+            Now let's analyze the <em>second</em> part of the original equation from step 1: <math><msup><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>)</mo></mrow><mn>2</mn></msup></math>.
+            <pre><math><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>=</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><mrow><mo>(</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mfrac><mi>&delta;</mi><mi>n</mi></mfrac><mo>)</mo></mrow><mo>=</mo><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow><mo>-</mo><mfrac><mi>&delta;</mi><mi>n</mi></mfrac><mo>=</mo><mi>&delta;</mi><mo>-</mo><mfrac><mi>&delta;</mi><mi>n</mi></mfrac><mo>=</mo><mi>&delta;</mi><mrow><mo>(</mo><mn>1</mn><mo>-</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><mo>)</mo></mrow><mo>=</mo><mi>&delta;</mi><mfrac><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow><mi>n</mi></mfrac></math></pre>
+            <p>Therefore, <math><msup><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>)</mo></mrow><mn>2</mn></msup><mo>=</mo><msup><mi>&delta;</mi><mn>2</mn></msup><mfrac><msup><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo></mrow><mn>2</mn></msup><msup><mi>n</mi><mn>2</mn></msup></mfrac></math>.</p>
+        </li>
+        <li>Finally, substitute the results from (7) and (8) back into the equation from (1):
+            <pre><math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mo>=</mo><mrow><mo>(</mo><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo></mrow><mfrac><msup><mi>&delta;</mi><mn>2</mn></msup><msup><mi>n</mi><mn>2</mn></msup></mfrac><mo>)</mo></mrow><mo>+</mo><mrow><mo>(</mo><msup><mi>&delta;</mi><mn>2</mn></msup><mfrac><msup><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo></mrow><mn>2</mn></msup><msup><mi>n</mi><mn>2</mn></msup></mfrac><mo>)</mo></mrow></math></pre>
+            <pre><math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mo>=</mo><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mfrac><mrow><msup><mi>&delta;</mi><mn>2</mn></msup><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo></mrow></mrow><msup><mi>n</mi><mn>2</mn></msup></mfrac><mrow><mo>(</mo><mn>1</mn><mo>+</mo><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo></mrow><mo>)</mo></mrow></math></pre>
+            <pre><math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mo>=</mo><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mfrac><mrow><msup><mi>&delta;</mi><mn>2</mn></msup><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo></mrow></mrow><msup><mi>n</mi><mn>2</mn></msup></mfrac><mrow><mo>(</mo><mi>n</mi><mo>)</mo></mrow></math></pre>
+            <pre><math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mo>=</mo><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mfrac><mrow><msup><mi>&delta;</mi><mn>2</mn></msup><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo></mrow></mrow><msup><mi>n</mi><mn>2</mn></msup></mfrac></math></pre>
+        </li>
+        <li>This formula works, but it can be simplified. Recall <math><mi>&delta;</mi><mo>=</mo><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow></math> and from (8) we have <math><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>)</mo></mrow><mo>=</mo><mi>&delta;</mi><mfrac><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow><mi>n</mi></mfrac></math>.
+            <!--<p>Let's define <math><msub><mi>&delta;</mi><mn>2</mn></msub><mo>=</mo><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo><mi>n</mi></msub><mo>)</mo></mrow></math>. Then <math><msub><mi>&delta;</mi><mn>2</mn></msub><mo>=</mo><mi>&delta;</mi><mfrac><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow><mi>n</mi></mfrac></math>.</p> -->
+            <p>Substitute into the formula from (9):</p>
+            <pre><math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mo>=</mo><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow><mrow><mo>(</mo><mi>&delta;</mi><mfrac><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow><mi>n</mi></mfrac><mo>)</mo></mrow></math></pre>
+            <pre><math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mo>=</mo><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi></mrow></msub><mo>)</mo></mrow></math></pre>
+            <!--<p>Or, written out fully:</p>
+            <pre><math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mo>=</mo><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>)</mo></mrow><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo><mi>n</C_></msub><mo>)</ -->
+</mrow></math></pre>
+        </li>
+    </ol>
+    <!-- *** FINE SEZIONE CORRETTA *** -->
+
+
+    <p><strong>Recurrence Relation (Variance):</strong></p>
+    <p>When a new value <math><msub><mi>x</mi><mi>n</mi></msub></math> arrives:</p>
+    <ol style="font-family: 'SFMono-Regular', Consolas, monospace; font-size: 1.1em; list-style-type: none; padding-left: 10px;">
+        <li>1. <math><mi>n</mi><mo>&larr;</mo><mi>n</mi><mo>+</mo><mn>1</mn></math></li>
+        <li>2. <math><mi>&delta;</mi><mo>&larr;</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></math></li>
+        <li>3. <math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>&larr;</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mfrac><mi>&delta;</mi><mi>n</mi></mfrac></math></li>
+        <li>4. <math><msub><mi>&delta;</mi><mn>2</mn></msub><mo>&larr;</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub></math></li>
+        <li>5. <math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mo>&larr;</mo><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mi>&delta;</mi><mo>&sdot;</mo><msub><mi>&delta;</mi><mn>2</mn></msub></math></li>
+    </ol>
+    <p>The <strong>sample variance</strong> is <math><msubsup><mi>s</mi><mi>n</mi><mn>2</mn></msubsup><mo>=</mo><mfrac><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></mfrac></math> (for <math><mi>n</mi><mo>&gt;</mo><mn>1</mn></math>).</p>
+
+    <hr>
+
+    <h2>💻 Interactive Calculator</h2>
+    <p>Use the form below to add data points one at a time. The statistics will update automatically using the Welford algorithm implemented in JavaScript.</p>
+    
+    <div class="calculator-ui">
+        <div class="input-group">
+            <label for="dataInput">New Value (<math><mi>x</mi></math>):</label>
+            <input type="number" id="dataInput" placeholder="Enter a number..." step="any">
+        </div>
+        
+        <div class="button-group">
+            <button id="addButton">Add Number</button>
+            <button id="resetButton">Reset</button>
+        </div>
+        
+        <div id="errorMessage">Please enter a valid number.</div>
+
+        <div id="results" class="results-grid">
+            <span>Count (<math><mi>n</mi></math>):</span><span id="statCount">0</span>
+            <span>Mean (<math><mover><mi>x</mi><mo>&OverBar;</mo></mover></math>):</span><span id="statMean">0.0000</span>
+            <span>Sample Variance (<math><msup><mi>s</mi><mn>2</mn></msup></math>):</span><span id="statVariance">0.0000</span>
+            <span>Sample Std. Dev. (<math><mi>s</mi></math>):</span><span id="statStdDev">0.0000</span>
+        </div>
+    </div>
+
+        <hr>
+
+    <h2>Numerical and Computational Analysis</h2>
+    <p>From a numerical analysis and computational perspective, here is a discussion of the advantages of online algorithms like Welford's.</p>
+
+    <h3>1. Numerical Stability and Catastrophic Cancellation</h3>
+    <p>This is the most critical advantage.</p>
+
+    <p><strong>The "Naive" Batch Algorithm's Flaw:</strong></p>
+    <p>A common one-pass batch algorithm for variance is the "sum of squares" method:</p>
+    <pre><math><msup><mi>s</mi><mn>2</mn></msup><mo>=</mo><mfrac><mrow><mrow><mo>(</mo><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup><mo>)</mo></mrow><mo>-</mo><mfrac><msup><mrow><mo>(</mo><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>x</mi><mi>i</mi></msub><mo>)</mo></mrow><mn>2</mn></msup><mi>n</mi></mfrac></mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></mfrac></math></pre>
+    <ul>
+        <li><strong>The Problem:</strong> This formula requires computing <math><mo>&sum;</mo><msup><mi>x</mi><mn>2</mn></msup></math> and <math><msup><mrow><mo>(</mo><mo>&sum;</mo><mi>x</mi><mo>)</mo></mrow><mn>2</mn></msup></math>. The numerator subtracts two potentially enormous and extremely close numbers.</li>
+        <li><strong>Catastrophic Cancellation:</strong> If your data points have a large magnitude but small variance (like <code>1e8 + 1</code>, <code>1e8 + 4</code>, ...), the two terms in the numerator will be massive and nearly identical. When a computer, using finite-precision (e.g., <code>float64</code>), subtracts them, the result is almost entirely rounding error. Most significant digits representing the *actual* variance (which is small) are lost.</li>
+    </ul>
+
+    <pre><math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mo>&larr;</mo><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mrow></msub><mo>)
+</mrow><mo>&sdot;</mo><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>)
+</mrow></math></pre>
+    <ul>
+        <li><strong>How it Avoids Cancellation:</strong> The update term is a product of two <em>small</em> numbers (the deltas). The algorithm never sums the large <math><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup></math> values. It accumulates the *variance* itself, which is typically a much smaller, more manageable number.</li>
+        <li><strong>Stability:</strong> The mean <math><mover><mi>x</mi><mo>&OverBar;</mo></mover></math> is always "in the middle" of the data, so the differences <math><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><mover><mi>x</mi><mo>&OverBar;</mo></mover><mo>)
+</mrow></math> are as small as possible. This minimizes rounding error at every single step, preventing it from ever accumulating into a catastrophic failure.</li>
+    </ul>
+
+    <h3>2. Overflow Management</h3>
+    <p><strong>The Batch Algorithm's Flaw:</strong></p>
+    <p>The term <math><mo>&sum;</mo><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup></math> can easily grow beyond the maximum value of a standard 64-bit float (<code>~1.8e308</code>), even if the final variance is a perfectly representable number. This will cause an overflow.</p>
+
+    <p><strong>Welford's (Online) Solution:</strong></p>
+    <p>The online algorithm never stores <math><mo>&sum;</mo><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup></math>. It stores <math><mi>n</mi></math> (count), <code>mean</code> (which stays within the data's range), and <math><msub><mi>M</mi><mn>2</mn></msub></math> (the sum of squared *differences*). The <math><msub><mi>M</mi><mn>2</mn></msub></math> term grows with the dataset's variance, *not* with its absolute magnitude, making it vastly less likely to overflow.</p>
+
+    <h3>3. Computational Efficiency and Scalability</h3>
+    <p>A comparison between the stable (two-pass) batch algorithm and the online algorithm:</p>
+
+    <table class="comparison-table">
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Batch Algorithm (Two-Pass)</th>
+                <th>Online Algorithm (Welford)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Time</strong></td>
+                <td>O(n)</td>
+                <td>O(n)</td>
+            </tr>
+            <tr>
+                <td><strong>Passes</strong></td>
+                <td><strong>Two passes</strong></td>
+                <td><strong>One single pass</strong></td>
+            </tr>
+            <tr>
+                <td><strong>Memory</strong></td>
+                <td><strong>O(n)</strong></td>
+                <td><strong>O(1)</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li><strong>Time Efficiency:</strong> While both are O(n), the batch algorithm must iterate over the data *twice* (or use the unstable one-pass formula). For data on disk or over a network, this "single-pass" property is a massive performance win.</li>
+        <li><strong>Scalability (Memory):</strong> This is a huge distinction.
+            <ul>
+                <li>A two-pass batch algorithm must store <em>all</em> data (<code>O(n)</code> memory). It is impossible to run this on a dataset larger than RAM.</li>
+                <li>The online algorithm requires only <strong>constant memory (<code>O(1)</code>)</strong>. It doesn't matter if you feed it 100 data points or 100 trillion; its memory footprint remains the same. This makes it suitable for unbounded data streams.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>4. Robustness</h3>
+    <ul>
+        <li><strong>Batch algorithms are brittle.</strong> They fail on very large datasets (memory) and on numerically challenging datasets (stability).</li>
+        <li><strong>Online algorithms are robust.</strong> They are *designed* to handle the "edge cases" of streaming or large-magnitude data. The fact that the <math><mover><mi>x</m><mo>&OverBar;</mo></mover></math> is updated at each step also makes the algorithm self-correcting.</li>
+    </ul>
+
+    
+    <!-- This script will run the test harness code when the page loads -->
+    <script src="script.js"></script>
+
+</body>
+</html>
