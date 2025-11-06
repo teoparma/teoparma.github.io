@@ -13,9 +13,9 @@ class OnlineStats {
     update(x) {
         this.n += 1;
         const delta = x - this.mean;
-        this.mean += delta / this.n;
+        this.mean += delta / this.n; // online mean
         const delta2 = x - this.mean;
-        this.M2 += delta * delta2;
+        this.M2 += delta * delta2; // online variance
     }
     
     /**

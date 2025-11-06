@@ -223,7 +223,7 @@
     <h2>📈 Derivations of Recurrence Relations</h2>
 
     <h3>1. Arithmetic Mean</h3>
-    <p><strong>Goal:</strong> Find a formula for the new mean <math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub></math> using the previous mean <math><msub><mover><mi>x</mi><mo>&OverBar;</mo><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></math> and the new data point <math><msub><mi>x</mi><mi>n</mi></msub></math>.</p>
+    <p><strong>Goal:</strong> Find a formula for the new mean <math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub></math> using the previous mean <math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></math> and the new data point <math><msub><mi>x</mi><mi>n</mi></msub></math>.</p>
     
     <p><strong>Definitions:</strong></p>
     <pre><math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>x</mi><mi>i</mi></msub></math></pre>
@@ -251,15 +251,14 @@
     <hr style="width:50%; margin-left:0;">
 
     <h3>2. Variance (Welford's Algorithm)</h3>
-    <p><strong>Goal:</strong> Find a recurrence relation for the variance. Instead, we update the <strong>sum of squared differences from the mean</strong>, <math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub></math>.</p>
+    <p><strong>Goal:</strong> Find a recurrence relation for the variance. Directly updating the (unbiased) variance <math><msubsup><mi>s</mi><mi>n</mi><mn>2</mn></msubsup></math> is complex. A better quantity for updating is the <strong>sum of squared differences from the mean</strong>, <math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub></math>.</p>
 
     <p><strong>Definitions:</strong></p>
     <pre><math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mo>=</mo><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>)</mo></mrow><mn>2</mn></msup></math></pre>
     <pre><math><msubsup><mi>s</mi><mi>n</mi><mn>2</mn></msubsup><mo>=</mo><mfrac><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></mfrac></math></pre>
     <p>From mean derivation, we know <math><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>=</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mfrac><mi>&delta;</mi><mi>n</mi></mfrac></math></p>
-    <p>where <math><mi>&delta;</mi><mo>=</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></math></p>
+    <p>where <math><mi>&delta;</mi><mo>=</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></math></p>
 
-    <!-- *** INIZIO SEZIONE CORRETTA *** -->
     <p><strong>Derivation:</strong></p>
     <ol>
         <li>Start with the definition of <math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub></math> and separate the <math><mi>n</mi></math>-th term:
@@ -306,7 +305,6 @@
 </mrow></math></pre>
         </li>
     </ol>
-    <!-- *** FINE SEZIONE CORRETTA *** -->
 
 
     <p><strong>Recurrence Relation (Variance):</strong></p>
