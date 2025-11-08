@@ -357,14 +357,14 @@
     <pre><math><msup><mi>s</mi><mn>2</mn></msup><mo>=</mo><mfrac><mrow><mrow><mo>(</mo><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup><mo>)</mo></mrow><mo>-</mo><mfrac><msup><mrow><mo>(</mo><munderover><mo>&sum;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>x</mi><mi>i</mi></msub><mo>)</mo></mrow><mn>2</mn></msup><mi>n</mi></mfrac></mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></mfrac></math></pre>
     <ul>
         <li><strong>The Problem:</strong> This formula requires computing <math><mo>&sum;</mo><msup><mi>x</mi><mn>2</mn></msup></math> and <math><msup><mrow><mo>(</mo><mo>&sum;</mo><mi>x</mi><mo>)</mo></mrow><mn>2</mn></msup></math>. The numerator subtracts two potentially enormous and extremely close numbers.</li>
-        <li><strong>Catastrophic Cancellation:</strong> If your data points have a large magnitude but small variance (like <code>1e8 + 1</code>, <code>1e8 + 4</code>, ...), the two terms in the numerator will be massive and nearly identical. When a computer, using finite-precision (e.g., <code>float64</code>), subtracts them, the result is almost entirely rounding error. Most significant digits representing the *actual* variance (which is small) are lost.</li>
+        <li><strong>Catastrophic Cancellation:</strong> If your data points have a large magnitude but small variance (like <code>1e8 + 1</code>, <code>1e8 + 4</code>, ...), the two terms in the numerator will be massive and nearly identical. When a computer, using finite-precision (e.g., <code>float64</code>), subtracts them, the result is almost entirely rounding error. Most significant digits representing the actual variance (which is small) are lost.</li>
     </ul>
 
     <pre><math><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi></mrow></msub><mo>&larr;</mo><msub><mi>M</mi><mrow><mn>2</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub><mo>+</mo><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mrow><mi>n</mi><mo>-</mo><mn>1</mrow></msub><mo>)
 </mrow><mo>&sdot;</mo><mrow><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>-</mo><msub><mover><mi>x</mi><mo>&OverBar;</mo></mover><mi>n</mi></msub><mo>)
 </mrow></math></pre>
     <ul>
-        <li><strong>How it Avoids Cancellation:</strong> The update term is a product of two <em>small</em> numbers (the deltas). The algorithm never sums the large <math><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup></math> values. It accumulates the *variance* itself, which is typically a much smaller, more manageable number.</li>
+        <li><strong>How it Avoids Cancellation:</strong> The update term is a product of two <em>small</em> numbers (the deltas). The algorithm never sums the large <math><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup></math> values. It accumulates the variance itself, which is typically a much smaller, more manageable number.</li>
         <li><strong>Stability:</strong> The mean <math><mover><mi>x</mi><mo>&OverBar;</mo></mover></math> is always "in the middle" of the data, so the differences <math><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>-</mo><mover><mi>x</mi><mo>&OverBar;</mo></mover><mo>)
 </mrow></math> are as small as possible. This minimizes rounding error at every single step, preventing it from ever accumulating into a catastrophic failure.</li>
     </ul>
@@ -374,7 +374,7 @@
     <p>The term <math><mo>&sum;</mo><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup></math> can easily grow beyond the maximum value of a standard 64-bit float (<code>~1.8e308</code>), even if the final variance is a perfectly representable number. This will cause an overflow.</p>
 
     <p><strong>Welford's (Online) Solution:</strong></p>
-    <p>The online algorithm never stores <math><mo>&sum;</mo><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup></math>. It stores <math><mi>n</mi></math> (count), <code>mean</code> (which stays within the data's range), and <math><msub><mi>M</mi><mn>2</mn></msub></math> (the sum of squared *differences*). The <math><msub><mi>M</mi><mn>2</mn></msub></math> term grows with the dataset's variance, *not* with its absolute magnitude, making it vastly less likely to overflow.</p>
+    <p>The online algorithm never stores <math><mo>&sum;</mo><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup></math>. It stores <math><mi>n</mi></math> (count), <code>mean</code> (which stays within the data's range), and <math><msub><mi>M</mi><mn>2</mn></msub></math> (the sum of squared differences). The <math><msub><mi>M</mi><mn>2</mn></msub></math> term grows with the dataset's variance, not with its absolute magnitude, making it vastly less likely to overflow.</p>
 
     <h3>3. Computational Efficiency and Scalability</h3>
     <p>A comparison between the stable (two-pass) batch algorithm and the online algorithm:</p>
@@ -407,7 +407,7 @@
     </table>
 
     <ul>
-        <li><strong>Time Efficiency:</strong> While both are O(n), the batch algorithm must iterate over the data *twice* (or use the unstable one-pass formula). For data on disk or over a network, this "single-pass" property is a massive performance win.</li>
+        <li><strong>Time Efficiency:</strong> While both are O(n), the batch algorithm must iterate over the data twice (or use the unstable one-pass formula). For data on disk or over a network, this "single-pass" property is a massive performance win.</li>
         <li><strong>Scalability (Memory):</strong> This is a huge distinction.
             <ul>
                 <li>A two-pass batch algorithm must store <em>all</em> data (<code>O(n)</code> memory). It is impossible to run this on a dataset larger than RAM.</li>
@@ -419,7 +419,7 @@
     <h3>4. Robustness</h3>
     <ul>
         <li><strong>Batch algorithms are brittle.</strong> They fail on very large datasets (memory) and on numerically challenging datasets (stability).</li>
-        <li><strong>Online algorithms are robust.</strong> They are *designed* to handle the "edge cases" of streaming or large-magnitude data. The fact that the <math><mover><mi>x</m><mo>&OverBar;</mo></mover></math> is updated at each step also makes the algorithm self-correcting.</li>
+        <li><strong>Online algorithms are robust.</strong> They are designed to handle the "edge cases" of streaming or large-magnitude data. The fact that the <math><mover><mi>x</m><mo>&OverBar;</mo></mover></math> is updated at each step also makes the algorithm self-correcting.</li>
     </ul>
 
     
