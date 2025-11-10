@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homework 3</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
         .decryption-input {
             width: 2.5rem; /* 40px */
@@ -227,6 +228,66 @@ Furthermore, recent empirical findings regarding psychedelics and altered states
         <div id="key_attack_results" class="mt-4 p-4 bg-gray-50 rounded-md shadow-inner"></div>
     </div>
 
+    <div class="mt-12 bg-gray-50 p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">How the Attack Works</h2>
+        <p class="mb-4 text-gray-700">
+            This attack is only possible because the RSA cryptography is being used in an
+            <strong>insecure and deterministic</strong> way (without "padding"). By encrypting each individual
+            letter (<code>M</code>) in the exact same way every time, the algorithm is reduced to a simple
+            <strong>monoalphabetic substitution cipher</strong>: every 'E' always becomes
+            the same number <code>C<sub>E</sub></code>, every 'A' becomes <code>C<sub>A</sub></code>, and so on.
+        </p>
+        <p class="mb-6 text-gray-700">
+            The goal is to find the private key (<code>d</code>, <code>n</code>). The script performs the following steps:
+        </p>
+
+        <ol class="list-decimal list-inside space-y-4 text-gray-600">
+            <li>
+                <strong>Frequency Analysis:</strong> It counts the occurrences of all numbers (ciphertext blocks) in the text.
+            </li>
+            <li>
+                <strong>Mapping (Hypothesis):</strong> It assumes that the most frequent ciphertext blocks correspond
+                to the most frequent letters in the English language. For example:
+                <ul class="list-disc list-inside ml-6 mt-2">
+                    <li>Most frequent block (<code>C<sub>1</sub></code>) &rarr; 'E' (ASCII code 69)</li>
+                    <li>Second most frequent block (<code>C<sub>2</sub></code>) &rarr; 'T' (ASCII code 84)</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Finding <code>n</code> (The Math Trick):</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-2">
+                    <li>We start with the RSA formula: <code>C &equiv; M<sup>e</sup> (mod n)</code>.</li>
+                    <li>This means that <code>C - M<sup>e</sup></code> is an exact multiple of <code>n</code>.
+                        Let's call this value <code>K = |C - M<sup>e</sup>| = k &middot; n</code>.</li>
+                    <li>The script calculates these <code>K</code> values for the mapped letters (testing common <code>e</code> values, like 3, 5, 7...).
+                        <br><code>K<sub>E</sub> = |C<sub>E</sub> - 69<sup>e</sup>| = k<sub>E</sub> &middot; n</code>
+                        <br><code>K<sub>T</sub> = |C<sub>T</sub> - 84<sup>e</sup>| = k<sub>T</sub> &middot; n</code>
+                    </li>
+                    <li><code>n</code> is a common divisor of all these <code>K</code> values. By calculating the
+                    <strong>Greatest Common Divisor (GCD)</strong> of <code>K<sub>E</sub></code>, <code>K<sub>T</sub></code>, ...
+                    we get <code>n</code> (or a small multiple of it, e.g., <code>2n</code>).</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Factoring <code>n</code>:</strong> Once <code>n</code> is found (e.g., 323),
+                the script factors it to find the primes <code>p</code> and <code>q</code> (e.g., 17 and 19).
+            </li>
+            <li>
+                <strong>Calculating the Private Key <code>d</code>:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2">
+                    <li>Calculate <code>&phi;(n) = (p-1)(q-1)</code>.</li>
+                    <li>Calculate <code>d</code> by finding the modular inverse of <code>e</code>:
+                        <br><code>d &equiv; e<sup>-1</sup> (mod &phi;(n))</code>.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Validation:</strong> The script uses the newly found private key <code>(d, n)</code>
+                to decrypt <code>C<sub>1</sub></code>. If the result is 'E', the attack was successful, and
+                the key is used to decrypt the entire message.
+            </li>
+        </ol>
+    </div>
+    
 <script src="script.js"></script>
 </body>
 </html>
