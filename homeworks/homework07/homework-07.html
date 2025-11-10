@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Security: Random Walk Models</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom style for D3 charts */
+        .grid .tick line { stroke: lightgrey; stroke-opacity: 0.7; stroke-dasharray: 2,2; }
+        .grid path { stroke: none; }
+        .line { fill: none; stroke-width: 1.5px; }
+        .axis-label { font-size: 0.8em; fill: #666; }
+        .overlay { fill: none; pointer-events: all; }
+        .tooltip {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: opacity 0.2s;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans leading-normal text-gray-800 p-8">
+
+    <div class="container mx-auto max-w-7xl bg-white shadow-xl rounded-lg p-8">
+        
+        <h1 class="text-3xl font-bold text-gray-900 mb-4 border-b pb-2">Server Security as a Random Walk</h1>
+
+        <!-- Analysis Section -->
+        <div class="mb-8 p-6 bg-blue-50 border border-blue-200 rounded-lg text-blue-900">
+            <h2 class="text-2xl font-semibold mb-3">Analysis: Two Security Models</h2>
+            <p class="mb-4">This simulation compares two models for a server's security over <strong>n</strong> weeks.</p>
+            
+            <!-- Model 1 Analysis (Constant) -->
+            <div id="analysis_model_1">
+                <h3 class="text-xl font-semibold mb-2 text-blue-800">Model 1: Constant Attackers (Classic Random Walk)</h3>
+                <ol class="list-decimal list-inside space-y-3">
+                    <li>
+                        <strong>Step Probability (Constant)</strong>
+                        <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                            <li>The number of attackers <strong>m</strong> is constant.</li>
+                            <li>The probability of remaining secure in any given week is <code>q = (1 - p)<sup>m</sup></code>.</li>
+                            <li>This probability <code>q</code> for a <strong>"Secure" (+1)</strong> step is the same for all <strong>n</strong> weeks.</li>
+                            <li>The probability of a <strong>"Breach" (-1)</strong> step is <code>1 - q</code>.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Convergence (Binomial Distribution):</strong>
+                        <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                            <li>Let <code>k</code> be the number of secure weeks. The final score is <code>S = 2k - n</code>.</li>
+                            <li>Since all <code>n</code> trials are independent and identical (same <code>q</code>), the number of successes <code>k</code> follows a <strong>Binomial Distribution</strong>: <code>k ~ Bin(n, q)</code>.</li>
+                            <li>As <code>n</code> diverges, this shape converges to a <strong>Normal (Gaussian) Distribution</strong> (Central Limit Theorem).</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+            <br><br>
+            <!-- Model 2 Analysis (Variable) -->
+            <div id="analysis_model_2">
+                 <h3 class="text-xl font-semibold mb-2 text-blue-800">Model 2: Decreasing Attackers (Non-Stationary Random Walk)</h3>
+                <ol class="list-decimal list-inside space-y-3">
+                    <li>
+                        <strong>Step Probability (Variable):</strong>
+                        <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                            <li>The number of attackers in week <code>w</code> is <code>m<sub>w</sub> = max(0, m_initial - w + 1)</code>, since it receives weekly securiy updates.</li>
+                            <li>The probability of remaining secure changes every week: <code>q<sub>w</sub> = (1 - p)<sup>m<sub>w</sub></sup></code>.</li>
+                            <li><code>q<sub>w</sub></code> (the probability of a <strong>+1</strong> step) increases as the number of attackers decreases.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Convergence (Poisson Binomial Distribution):</strong>
+                        <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                            <li>The final score is still <code>S = 2k - n</code>, where <code>k</code> is the total number of secure weeks.</li>
+                            <li>However, <code>k</code> is now the sum of <code>n</code> trials that are not identical (<code>q<sub>w</sub></code> is different each week).</li>
+                            <li>This no longer follows a simple Binomial Distribution. It follows a <strong>Poisson Binomial Distribution</strong>.</li>
+                            <li>As <code>n</code> diverges, this distribution also converges to a <strong>Normal (Gaussian) Distribution</strong>, but with a different mean and variance than Model 1.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-6 mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg items-end">
+            <div>
+                <label for="model_select" class="block text-sm font-medium text-gray-700">Security Model</label>
+                <select id="model_select" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <option value="constant" selected>Model 1: Constant</option>
+                    <option value="variable">Model 2: Decreasing</option>
+                </select>
+            </div>
+            <div>
+                <label for="n_weeks" class="block text-sm font-medium text-gray-700">Weeks (n)</label>
+                <input type="number" id="n_weeks" value="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            </div>
+            <div>
+                <label for="m_attackers" class="block text-sm font-medium text-gray-700">Attackers (m)</label>
+                <input type="number" id="m_attackers" value="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            </div>
+            <div>
+                <label for="p_breach" class="block text-sm font-medium text-gray-700">Attacker Prob. (p)</label>
+                <input type="number" id="p_breach" value="0.05" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            </div>
+            <div>
+                <label for="t_trajectories" class="block text-sm font-medium text-gray-700">Simulations (T)</label>
+                <input type="number" id="t_trajectories" value="10000" step="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            </div>
+            <button id="run_sim" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md shadow-sm transition duration-150 h-10">Run Simulation</button>
+        </div>
+        
+        <div id="loading" class="text-center text-lg font-semibold text-blue-600 my-4" style="display: none;">
+            Running simulation...
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white p-6 rounded-lg shadow-md border">
+                <h2 class="text-xl font-semibold text-center mb-4">Random Trajectories (First 50)</h2>
+                <div id="chart_trajectories" class="w-full"></div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md border">
+                <h2 class="text-xl font-semibold text-center mb-4">Final Score Distribution (All Simulations)</h2>
+                <div id="chart_histogram" class="w-full"></div>
+            </div>
+        </div>
+
+        <div id="tooltip" class="tooltip"></div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

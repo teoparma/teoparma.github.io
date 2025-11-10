@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analogies & Mathematical Properties</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcPFOPsYlo/sF88JybHyC4RmWPpg/Kx8wSAFReSj/gOtfh+2rBxqjPXQitY1/wGj" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTadxHRDOj/KnC6NfCvJv/BJi9ehtdhve2oT5oNlRM/c3m/NNEU=," crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/Gf1Yp4VPHSrb8Hpb1WStvY2eY+nN20LWAL_E/rM2/KNOcQCC" crossorigin="anonymous"></script>
+    <script>
+        // This runs KaTeX automatically on the whole document
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '\\[', right: '\\]', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false}
+                ]
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f8f9fa;
+            color: #212529;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: justify;
+        }
+        h1, h2, h3 {
+            color: #343a40;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 5px;
+            margin-top: 1.5em;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; border-bottom: none; }
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            background-color: #e9ecef;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #dee2e6;
+            margin: 2.5em 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1em;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        .img-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Homeworks 4 & 7: Analogies and Mathematical Properties</h1>
+
+        <h2>Analogies: LLN vs. Random Walk</h2>
+        
+        <p>Homework 7, a simulation of a <strong>Random Walk</strong>, shares a deep mathematical foundation with the previous assignment (homework 4) on the <strong>Law of Large Numbers (LLN)</strong>. Both are, at their core, simulations of a <strong>Bernoulli process</strong>.</p>
+        
+        <p>A Bernoulli process is a sequence of <code>n</code> independent trials, where each trial has exactly two outcomes (e.g., success/failure, secure/breached), and the probability of success remains constant for every trial (at least, in our Model 1).</p>
+
+        <h3>Similarities</h3>
+        <ul>
+            <li><strong>Bernoulli Foundation:</strong> Both models are built on <code>n</code> independent trials.
+                <ul>
+                    <li><strong>HW 4 (LLN):</strong> A "trial" is a coin flip, with outcomes {Success, Failure} and probability <code>p</code>.</li>
+                    <li><strong>HW 7 (Random Walk):</strong> A "trial" is a week, with outcomes {Secure, Breached} and probability <br><code>q = (1-p)<sup>m</sup></code>.</li>
+                </ul>
+            </li>
+            <li><strong>Binomial Core:</strong> In both models, the total number of "successes" (<code>k</code> heads in HW 4, <code>k</code> secure weeks in HW 7) follows a <strong>Binomial Distribution</strong>, <code>k ~ Bin(n, q)</code>. Our Model 2 (decreasing attackers) is a generalization known as a <strong>Poisson Binomial Distribution</strong>, as the probability <code>q<sub>w</sub></code> is no longer identical for each trial.</li>
+            <li><strong>Central Limit Theorem:</strong> As <code>n</code> (the number of trials/weeks) diverges, the resulting distributions in both simulations (Binomial and Poisson Binomial) converge to a <strong>Normal (Gaussian) Distribution</strong>. This is why the histograms take on a "bell curve" shape for large <code>n</code>.</li>
+        </ul>
+
+        <h3>Key Differences: Average vs. Displacement</h3>
+        <p>The primary difference between the two assignments is not in the underlying process, but in <i>what is being measured</i> and <i>what concept is being demonstrated</i>.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>HW 4: Law of Large Numbers (LLN)</th>
+                    <th>HW 7: Random Walk (Server Security)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Metric Measured</strong></td>
+                    <td>The <strong>Average</strong> (or mean): $\bar{X}_n = k/n$</td>
+                    <td>The <strong>Cumulative Score</strong> (or displacement): $S_n = 2k - n$</td>
+                </tr>
+                <tr>
+                    <td><strong>Core Question</strong></td>
+                    <td>"What is the *true probability* of the process?"</td>
+                    <td>"How *far* from the origin has the process drifted?"</td>
+                </tr>
+                <tr>
+                    <td><strong>Concept Demonstrated</strong></td>
+                    <td><strong>Convergence & Estimation:</strong> The average $\bar{X}_n$ converges to a single, stable value (the true probability $p$). It demonstrates stability.</td>
+                    <td><strong>Diffusion & Volatility:</strong> The score $S_n$ tends to drift further and further away from zero. It demonstrates cumulative deviation.</td>
+                </tr>
+                <tr>
+                    <td><strong>Analogy</strong></td>
+                    <td>A casino operator counting wins over millions of games to verify the house edge (the average).</td>
+                    <td>A single gambler tracking their total profit/loss over a night (the cumulative score).</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr>
+
+        <h2>Mathematical Properties and Relationships</h2>
+        
+        <p>The distributions generated in these homeworks are intrinsically linked to fundamental concepts in combinatorics.</p>
+
+        <h3>Binomial Coefficients & Combinatorial Coefficients</h3>
+        <p>A <strong>combinatorial coefficient</strong>, specifically the <strong>binomial coefficient</strong>, answers the question: "How many different paths (trajectories) result in the same final score?"</p>
+        
+        <p>The number of ways to get exactly $k$ "secure" weeks in $n$ total weeks is given by "n choose k":</p>
+        
+        $$ \binom{n}{k} = C(n, k) = \frac{n!}{k!(n-k)!} $$
+        
+        <p>This is precisely why the Binomial Distribution (from Model 1) has its name. The probability of any *single* path with $k$ successes is $q^k (1-q)^{n-k}$. Since there are $\binom{n}{k}$ such paths, the total probability of having $k$ successes is:</p>
+        
+        $$ P(k) = \binom{n}{k} q^k (1-q)^{n-k} $$
+
+        <h3>Pascal's Triangle</h3>
+        <p>Pascal's Triangle is a beautiful, recursive visualization of the binomial coefficients. Each number in the triangle is the sum of the two numbers directly above it: $C(n, k) = C(n-1, k-1) + C(n-1, k)$.</p>
+
+        <p>This triangle is also a **direct map of a symmetric random walk** ($q=0.5$). The value at row $n$, position $k$ literally counts the number of distinct paths a walker can take from the origin (0,0) to reach that point in $n$ steps. The "score" $S = 2k - n$ is just a re-labeling of the $k$-th position in row $n$.</p>
+        
+        <div class="img-container">
+            
+            <p style="font-size: 0.9em; color: #555;">The numbers in Pascal's Triangle (e.g., at row 4) show how many paths lead to each point: 1 path to -4, 4 paths to -2, 6 paths to 0, 4 paths to +2, and 1 path to +4.</p>
+        </div>
+
+        <h3>Binomial Expansion</h3>
+        <p>The <strong>Binomial Expansion</strong> is the algebraic generator for these probabilities and coefficients. It defines how to expand a power of a sum:</p>
+        
+        $$ (x + y)^n = \sum_{k=0}^{n} \binom{n}{k} x^k y^{n-k} $$
+
+        <p>The connection becomes clear if we set $x = q$ (probability of +1) and $y = (1-q)$ (probability of -1):</p>
+        
+        $$ (q + (1-q))^n = 1^n = 1 $$
+        
+        <p>This expansion shows that the sum of all possible outcomes is 1. Each term in the sum, $\binom{n}{k} q^k (1-q)^{n-k}$, is precisely the probability of ending up in the state with $k$ successes (which corresponds to a score of $S = 2k - n$).</p>
+
+        <h3>The Fibonacci Sequence</h3>
+        <p>A more subtle connection exists with the Fibonacci sequence (1, 1, 2, 3, 5, 8, ...). While not directly counting the paths in *this* specific random walk, it appears in related combinatorial problems (e.g., counting paths that don't allow two consecutive steps in the same direction).</p>
+        
+        <p>The most famous link is visual: the **sums of the "shallow diagonals" of Pascal's Triangle are the Fibonacci numbers**. This elegantly ties all these concepts together: the Random Walk is mapped by Pascal's Triangle, whose coefficients are defined by the Binomial Expansion, and whose diagonals sum to the Fibonacci sequence.</p>
+
+         <div class="img-container">
+            
+            <p style="font-size: 0.9em; color: #555;">Summing the diagonals of Pascal's Triangle reveals the Fibonacci sequence (1, 1, 2, 3, 5, 8, ...).</p>
+        </div>
+
+    </div>
+
+</body>
+</html>
