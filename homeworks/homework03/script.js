@@ -1,3 +1,6 @@
+const P_FIXED = 17;
+const Q_FIXED = 19;
+
 const english_frequencies = new Map([
     ['E', 12.70], ['T', 9.06], ['A', 8.17], ['O', 7.51], ['I', 6.97],
     ['N', 6.75], ['S', 6.33], ['H', 6.09], ['R', 5.99], ['D', 4.25],
@@ -16,48 +19,71 @@ const english_doubles = ["SS", "EE", "TT", "FF", "LL", "MM", "OO"];
 
 // Greatest Common Divisor
 function gcd(a, b) {
-    while (b) {
-        [a, b] = [b, a % b];
+    // Ensure they are BigInt
+    const aBig = BigInt(a);
+    const bBig = BigInt(b);
+
+    let a_temp = aBig < 0n ? -aBig : aBig;
+    let b_temp = bBig < 0n ? -bBig : bBig;
+    
+    while (b_temp) {
+        [a_temp, b_temp] = [b_temp, a_temp % b_temp];
     }
-    return a;
+    // Convert back if necessary
+    // Our 'find_keys' function already passes BigInt, so this is ok.
+    // For RSA_genKeys which uses Number, we must convert back.
+    if (typeof a === 'number' && typeof b === 'number') {
+        return Number(a_temp);
+    }
+    return a_temp; // Returns a BigInt
 }
 
 // Aux function for modular exponentiation (pow(base, exp) % mod)
 function powerMod(base, exp, mod) {
-    let res = 1;
+    base = BigInt(base);
+    exp = BigInt(exp);
+    mod = BigInt(mod);
+
+    if (mod === 0n) throw new Error("Modulus can not be zero.");
+
+    let res = 1n;
     base %= mod;
-    while (exp > 0) {
-        if (exp % 2 === 1) {
+    while (exp > 0n) {
+        if (exp % 2n === 1n) {
             res = (res * base) % mod;
         }
-        exp = Math.floor(exp / 2);
+        exp = exp >> 1n;
         base = (base * base) % mod;
     }
-    return res;
+    return Number(res);
 }
 
 // Aux function computing the modular multiplicative inverse
 function modInverse(e, phi) {
-    let t = 0; 
-    let newt = 1;
-    let r = phi;
-    let newr = e;
+    // Convert to BigInt
+    const eBig = BigInt(e);
+    const phiBig = BigInt(phi);
+
+    let t = 0n; 
+    let newt = 1n;
+    let r = phiBig;
+    let newr = eBig;
     
-    while (newr !== 0) {
-        let quotient = Math.floor(r / newr);
+    while (newr !== 0n) {
+        let quotient = r / newr;
         [t, newt] = [newt, t - quotient * newt];
         [r, newr] = [newr, r - quotient * newr];
     }
     
-    if (r > 1) {
-        console.error("e non è coprimo con phi. Impossibile trovare l'inverso.");
-        return null; // Handle error gracefully
+    if (r > 1n) {
+        console.error("e is not coprime with phi. Cannot find inverse.");
+        return null;
     }
     
-    if (t < 0) {
-        t = t + phi;
+    if (t < 0n) {
+        t = t + phiBig;
     }
-    return t;
+    return Number(t); // Convert back to Number
 }
 
 function RSA_genKeys(p, q){
@@ -65,7 +91,7 @@ function RSA_genKeys(p, q){
         return {error: "p and q must be different positive prime numbers"};
     }
     if(p * q < 90) { // Check needed because charCode(Z) is 90
-        return {error: `Il modulo N (${p*q}) deve essere maggiore di 90 per cifrare la 'Z'. Aumenta p o q.`};
+        return {error: `The modulus N (${p*q}) must be greater than 90 to encrypt 'Z'. Increase p or q.`};
     }
 
     const n = p * q;
@@ -78,7 +104,7 @@ function RSA_genKeys(p, q){
     const d = modInverse(e, phi); 
 
     if (d === null) {
-        return {error: "Impossibile trovare l'inverso modulare. Prova altri numeri primi."};
+        return {error: "Could not find modular inverse. Try other prime numbers."};
     }
 
     return {
@@ -223,33 +249,238 @@ function frequency_analysis(ciphertext) {
     return {decryption_map, enc_bigrams, enc_trigrams, enc_doubles, enc_frequency};
 }
 
+// BRUTE FORCE
+
+/**
+ * Attempts to factorize n into p*q.
+ * @param {number} n The modulus to factorize.
+ * @returns {{p: number, q: number} | null} An object with p and q, or null.
+ */
+function try_factorize(n) {
+    if (isNaN(n) || n < 2) return null;
+    
+    // Handles factor 2 (but RSA p,q are > 2)
+    if (n % 2 === 0) {
+        const q = n / 2;
+        if (q > 1 && q !== 2) return { p: 2, q: q }; // p=2 is a valid but rare case
+        return null; 
+    }
+    
+    // Check only odd divisors
+    for (let i = 3; i * i <= n; i += 2) {
+        if (n % i === 0) {
+            const q = n / i;
+            // Assume i and q are our prime p and q
+            return { p: i, q: q };
+        }
+    }
+    // If the loop finishes, n is (probably) prime
+    return null; 
+}
+
+/**
+ * Intelligent factorization handler.
+ * The 'n_candidate' (from GCD) could be n*k.
+ * Tries to divide it by small k to find the real n.
+ * @param {number} n_candidate The result from the GCD.
+ * @returns {{n: number, p: number, q: number} | null}
+ */
+function factorize_rsa(n_candidate) {
+    // List of n candidates to test.
+    // Start with the candidate itself (the k=1 case)
+    let n_to_test = [n_candidate];
+
+    // Add n/k for small k
+    const small_k = [2, 3, 5, 7];
+    for (const k of small_k) {
+        if (n_candidate % k === 0) {
+            n_to_test.push(n_candidate / k);
+        }
+    }
+    // Remove duplicates and sort (ascending)
+    const unique_n = [...new Set(n_to_test)].sort((a,b) => a-b);
+    
+    for (const n of unique_n) {
+        if (n <= 90) continue; // n must be > 'Z' (90)
+        
+        const factors = try_factorize(n);
+        
+        // If we find p and q that multiply to n, we have a winner
+        if (factors && (factors.p * factors.q === n)) {
+            // Found!
+            return { n: n, p: factors.p, q: factors.q };
+        }
+    }
+
+    // Failed, no n candidate produced valid factors
+    return null; 
+}
+
+/**
+ * Executes the frequency analysis attack to find n, p, q, e, d.
+ * This function reads 'currentCiphertext' and 'english_freq_sorted'
+ * and writes the results to the 'key_attack_results' HTML element.
+ */
+function find_keys() {
+    const results_div = document.getElementById('key_attack_results');
+    results_div.innerHTML = '<p class="text-gray-500 animate-pulse">Analysis in progress... (may take a few seconds)</p>';
+
+    const enc_frequency = compute_frequencies(currentCiphertext);
+    if(enc_frequency.length == 0) {
+        results_div.innerHTML = `<p class="text-red-500">Error: Perform analysis first</p>`;
+        return;
+    }
+    
+    // Need at least 3-4 unique blocks for a reliable GCD
+    const top_n_mappings = 2; 
+    if (enc_frequency.length < top_n_mappings) {
+        results_div.innerHTML = `<p class="text-red-500">Error: Ciphertext too short. At least ${top_n_mappings} unique blocks are needed to attempt the attack.</p>`;
+        return;
+    }
+
+
+    const potential_exponents = [3, 5, 7, 11, 17, 65537]; // Common public exponents to test
+
+    // Map the most frequent cipher blocks with the most frequent letters
+    // C1 -> M1 ('E'), C2 -> M2 ('T'), C3 -> M3 ('A'), ...
+    const mappings = [];
+    for(let i=0; i < top_n_mappings; i++) {
+        const [cipherBlock, _] = enc_frequency[i];
+        const [plainChar, __] = english_freq_sorted[i];
+        const plainCode = plainChar.charCodeAt(0); // Use ASCII (e.g., 'E' = 69)
+        mappings.push({ C: cipherBlock, M: plainCode, char: plainChar });
+    }
+
+    for (const e of potential_exponents) {
+        // Calculate K = |C - M^e| values
+        // We must use BigInt to avoid overflow with M^e
+        const K_values = [];
+        try {
+            for (const map of mappings) {
+                const C_big = BigInt(map.C);
+                const M_big = BigInt(map.M);
+                const e_big = BigInt(e);
+                
+                const M_e_big = M_big ** e_big; // Calculate M^e
+                
+                let K = C_big - M_e_big; // K = C - M^e
+                if(K < 0n) K = -K; // Equivalent of Math.abs()
+                
+                if (K !== 0n) { // A K=0 doesn't help in the GCD calculation
+                   K_values.push(K);
+                }
+            }
+        } catch (err) {
+            console.warn(`Error during BigInt calculation for e=${e}: ${err}. Skipping.`);
+            continue;
+        }
+
+        if (K_values.length < 2) continue; // We cannot calculate the GCD
+
+        // Calculate the GCD of all K values
+        // n must be a common divisor of all K
+        let potential_n_big = K_values[0];
+        for (let i = 1; i < K_values.length; i++) {
+            // Use the existing gcd function, which also works with BigInt
+            potential_n_big = gcd(potential_n_big, K_values[i]);
+        }
+        
+        // The GCD result could be 0n or 1n if the assumptions are wrong
+        if (potential_n_big <= 1n) continue;
+
+        // The GCD could be n, or a multiple of n (e.g., 2n, 3n).
+        // For small p,q, it's very likely to be n.
+        // Convert to Number for the factorization and mod functions.
+        let potential_n_gcd;
+        try {
+            potential_n_gcd = Number(potential_n_big);
+            if(!Number.isSafeInteger(potential_n_gcd)){
+                 console.warn("Potential n (from GCD) too large:", potential_n_big);
+                 continue;
+             }
+        } catch (err) {
+            console.warn("Potential n (from GCD) not convertible to Number:", potential_n_big);
+            continue;
+        }
+
+        if (potential_n_gcd <= 90) continue;
+
+        const rsa_keys = factorize_rsa(potential_n_gcd);
+
+        const { n, p, q } = rsa_keys;
+        
+        // Calculate phi and d
+        const phi = (p - 1) * (q - 1);
+        
+        // Check if e and phi are coprime
+        if (gcd(e, phi) !== 1) {
+            // This hypothesis (e, n) is wrong
+            continue;
+        }
+
+        const d = modInverse(e, phi);
+        if (d === null) continue; // Inverse not found
+
+        // --- Final Validation ---
+        // Check if C1 decrypted with (d, n) gives M1
+        const M1_check = powerMod(mappings[0].C, d, n);
+        const M2_check = powerMod(mappings[1].C, d, n);
+
+        if (M1_check === mappings[0].M && M2_check === mappings[1].M) {
+            // FOUND!
+            results_div.innerHTML = `
+                <h3 class="text-lg font-bold text-emerald-600">🎉 Keys Found!</h3>
+                <ul class="list-disc pl-5 mt-2 space-y-1">
+                    <li><strong>Public Exponent (e):</strong> ${e}</li>
+                    <li><strong>Modulus (n):</strong> ${n}</li>
+                    <li><strong>Prime (p):</strong> ${p}</li>
+                    <li><strong>Prime (q):</strong> ${q}</li>
+                    <li><strong>Phi(n):</strong> ${phi}</li>
+                    <li><strong>Private Exponent (d):</strong> ${d}</li>
+                </ul>
+                <p class="mt-3 text-sm">The decryption map and decrypted text have been updated automatically.</p>
+            `;
+            
+            // Success! Update the global decryption map.
+            currentDecryptionMap.clear();
+            for(const enc_char of currentCiphertext){
+                if (Number.isInteger(enc_char) && !currentDecryptionMap.has(enc_char)) {
+                    const dec_code = powerMod(enc_char, d, n);
+                    currentDecryptionMap.set(enc_char, String.fromCharCode(dec_code));
+                }
+            }
+            // Update the UI with the correct map
+            renderDecryptionMapTable(enc_frequency, currentDecryptionMap);
+            updateDecryptedText();
+            return; // Done
+        }
+    } // end 'e' loop
+
+    results_div.innerHTML = '<p class="text-red-500">Attack failed. Unable to find keys with standard assumptions (e=3,5,7...; mapping E,T,A...). The numbers p and q might be too large or the text too short.</p>';
+}
+
 // --- HTML INTEGRATION ---
 
 let currentCiphertext = [];
 let currentDecryptionMap = new Map();
 
 document.addEventListener('DOMContentLoaded', () => {
-    updateModulusN();
-    document.getElementById('p').addEventListener('input', updateModulusN);
-    document.getElementById('q').addEventListener('input', updateModulusN);
+    const n = P_FIXED * Q_FIXED;
+    const n_display = document.getElementById('modulus_n');
+    if (n_display) {
+        n_display.textContent = n;
+    }
 });
-
-function updateModulusN(){
-    const p = parseInt(document.getElementById('p').value) || 0;
-    const q = parseInt(document.getElementById('q').value) || 0;
-    const n = p * q;
-    document.getElementById('modulus_n').textContent = isNaN(n) ? 'Errore' : n;
-}
 
 function runAnalysis() {
     const plaintext = document.getElementById('plaintext').value;
-    const p = parseInt(document.getElementById('p').value);
-    const q = parseInt(document.getElementById('q').value);
+    const p = P_FIXED;
+    const q = Q_FIXED;
     const analysisSection = document.getElementById('analysis_section');
     
     const keys = RSA_genKeys(p, q);
     if (keys.error) {
-        console.error("Errore RSA: " + keys.error); 
+        console.error("RSA Error: " + keys.error); 
         return;
     }
 
@@ -270,6 +501,8 @@ function runAnalysis() {
     
     analysisSection.style.display = 'block';
     document.getElementById('custom_ngram_section').style.display = 'block';
+
+    document.getElementById('find_keys_button').classList.remove('hidden');
 }
 
 /**
@@ -317,7 +550,7 @@ function generateCustomNGrams() {
     const nInput = document.getElementById('ngram_n_input');
     const n = parseInt(nInput.value);
     const table = document.getElementById('custom_ngram_table');
-    table.innerHTML = ''; // Pulisce la tabella precedente
+    table.innerHTML = ''; // Clears the previous table
 
     if (isNaN(n) || n < 1) {
         alert("Insert a valid number for N");
@@ -366,6 +599,7 @@ function renderDecryptionMapTable(enc_frequency, initialMap) {
     const table = document.getElementById('decryption_map_table');
     let html = '<thead class="bg-gray-50"><tr><th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Encrypted Block</th><th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Decrypt as</th></tr></thead><tbody class="divide-y divide-gray-200">';
     
+    // Sort blocks numerically for a consistent display
     const sortedEncFrequency = [...enc_frequency].sort(([a], [b]) => a - b);
 
 
@@ -433,7 +667,7 @@ function updateDecryptedText() {
 
 /**
  * @param {string} tableId HTML table ID.
- * @param {Array<[string, string]>} nGramFrequencies
+ *Map
  * @param {string[]} expectedNGrams
  */
 function renderNGramTable(tableId, nGramFrequencies, expectedNGrams) {
@@ -479,7 +713,7 @@ function renderDoublesTable(doublesFrequencies) {
     const table = document.getElementById('enc_doubles_table');
     
     let html = '<thead class="bg-gray-50"><tr>';
-    html += '<th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Double Block Cifrato</th>';
+    html += '<th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Encrypted Double Block</th>';
     html += '<th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Expected Double</th>';
     html += '</tr></thead><tbody class="divide-y divide-gray-200">';
     
@@ -490,11 +724,11 @@ function renderDoublesTable(doublesFrequencies) {
     const numRows = Math.max(topCiphered.length, topExpected.length);
 
     for (let i = 0; i < numRows; i++) {
-        // Parte cifrata
+        // Encrypted part
         const [block, _] = topCiphered[i] || [null, null];
         const displayCipherBlock = block !== null ? `<span class="text-blue-600 font-mono">${block}, ${block}</span>` : '-';
         
-        // Parte attesa
+        // Expected part
         const expectedSequence = topExpected[i] || '-';
 
         html += `<tr>

@@ -154,7 +154,7 @@
         
         <p>The distributions generated in these exercises are intrinsically linked to fundamental concepts in combinatorics.</p>
 
-        <h3>Binomial Coefficients & Combinatorial Coefficients</h3>
+        <h3>Binomial Coefficients</h3>
         <p>A <strong>combinatorial coefficient</strong>, specifically the <strong>binomial coefficient</strong>, answers the question: "How many different paths (trajectories) result in the same final score?"</p>
         
         <p>The number of ways to get exactly $k$ "secure" weeks in $n$ total weeks is given by "n choose k":</p>
@@ -166,7 +166,7 @@
         $$P(k) = \binom{n}{k} q^k (1-q)^{n-k}$$
 
         <h3>Pascal's Triangle</h3>
-        <p>Pascal's Triangle is a beautiful, recursive visualization of the binomial coefficients. Each number in the triangle is the sum of the two numbers directly above it: $C(n, k) = C(n-1, k-1) + C(n-1, k)$.</p>
+        <p>Pascal's Triangle is a recursive visualization of the binomial coefficients. Each number in the triangle is the sum of the two numbers directly above it: $C(n, k) = C(n-1, k-1) + C(n-1, k)$.</p>
 
         <p>This triangle is also a <strong>direct map of a symmetric random walk</strong> ($q=0.5$). The value at row $n$, position $k$, literally counts the number of distinct paths a walker can take from the origin (0,0) to reach that point in $n$ steps. The "score" $S = 2k - n$ is just a re-labeling of the $k$-th position in row $n$.</p>
         
