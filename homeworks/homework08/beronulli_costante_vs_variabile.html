@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Bernoulli: Confronto Round Multipli</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f7f9fc;
+      color: #222;
+      text-align: center;
+      margin: 30px;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      background: white;
+      margin: 10px;
+    }
+    #controls {
+      margin: 15px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+    /* */
+    #description {
+      max-width: 900px;
+      margin: 15px auto;
+      text-align: left;
+      background: #fff;
+      padding: 15px 25px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      line-height: 1.6;
+    }
+    #description h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    hr {
+      margin: 25px 0;
+      border: 0;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Confronto: Bernoulli costante vs variabile (Round Multipli)</h1>
+
+  <div id="description">
+    <h2>Le differenze tra i due approcci</h2>
+    <p>
+      Questa simulazione confronta due tipi di "random walk" (cammino aleatorio) che si basano entrambi su processi di Bernoulli (eventi con due possibili esiti, +1 o -1).
+      La differenza fondamentale <strong>non risiede nella casualità</strong> — entrambi i processi utilizzano la <strong>stessa identica sequenza</strong> di numeri casuali per ogni round — ma nel <strong>modo in cui interpretano</strong> quella sequenza.
+    </p>
+    <ul>
+      <li>
+        <strong>Processo a <i>p</i> costante (Grafico 1):</strong> Questo è un classico cammino aleatorio omogeneo. Ad ogni passo, la probabilità <i>p</i> di ottenere +1 è fissa (es. <i>p</i>=0.5). La decisione (+1 o -1) è presa confrontando il numero casuale del passo corrente con questa singola soglia costante. Se <i>p</i> è diverso da 0.5, il cammino avrà una "deriva" (<i>drift</i>) costante verso l'alto (<i>p</i>>0.5) o verso il basso (<i>p</i>&lt;0.5).
+      </li>
+      <li>
+        <strong>Processo a <i>p</i> variabile (Grafico 2):</strong> Questo è un processo non-omogeneo. La probabilità <i>p</i> non è costante, ma cambia linearmente ad ogni passo, partendo da <i>p₀</i> e arrivando a <i>p₁</i>. Di conseguenza, la "soglia di decisione" per interpretare il numero casuale cambia nel tempo. Ad esempio, un numero casuale come 0.6 potrebbe risultare in un -1 all'inizio (se <i>p</i> è 0.3) ma in un +1 verso la fine (se <i>p</i> è diventato 0.8).
+      </li>
+    </ul>
+    <p>
+      Gli istogrammi mostrano come questa differenza influenzi la distribuzione dei punteggi finali dopo N round. Anche se la probabilità <i>media</i> dei due processi fosse identica (es. <i>p</i> costante = 0.5 vs <i>p</i> variabile da 0.1 a 0.9), le loro distribuzioni finali (medie e varianze) saranno diverse.
+    </p>
+  </div>
+  <p>Le traiettorie mostrano solo l'ultimo round. Gli istogrammi mostrano la distribuzione dei punteggi finali di tutti i round.</p>
+
+  <div id="controls">
+    <label>Numero di passi (per round):
+      <input type="number" id="steps" value="100" min="10" max="5000">
+    </label>
+    <label>Probabilità iniziale p₀:
+      <input type="number" id="pStart" value="0.5" step="0.05" min="0" max="1">
+    </label>
+    <label>Probabilità finale p₁:
+      <input type="number" id="pEnd" value="0.5" step="0.05" min="0" max="1">
+    </label>
+    <label>Numero di round:
+      <input type="number" id="numRounds" value="2000" min="10" max="100000">
+    </label>
+    <button id="runBtn">Esegui simulazioni</button>
+  </div>
+
+  <canvas id="canvas1" width="500" height="250"></canvas>
+  <canvas id="canvas2" width="500" height="250"></canvas>
+
+  <hr>
+  <h2>Distribuzione Punteggi Finali (Istogrammi)</h2>
+  
+  <canvas id="hist1" width="500" height="300"></canvas>
+  <canvas id="hist2" width="500" height="300"></canvas>
+
+  <script>
+    const c1 = document.getElementById("canvas1");
+    const c2 = document.getElementById("canvas2");
+    const ctx1 = c1.getContext("2d");
+    const ctx2 = c2.getContext("2d");
+
+    const h1 = document.getElementById("hist1");
+    const h2 = document.getElementById("hist2");
+    const htx1 = h1.getContext("2d");
+    const htx2 = h2.getContext("2d");
+
+    // Genera un array di numeri casuali in [0,1)
+    function randomSequence(n) {
+      return Array.from({ length: n }, () => Math.random());
+    }
+
+    // Genera una random walk dati i numeri casuali e i valori di p
+    function generateWalkFromRandoms(randoms, pValues) {
+      let pos = 0;
+      const positions = [pos];
+      for (let i = 0; i < randoms.length; i++) {
+        const p = Array.isArray(pValues) ? pValues[i] : pValues;
+        const step = randoms[i] < p ? +1 : -1;
+        pos += step;
+        positions.push(pos);
+      }
+      return positions;
+    }
+
+    // Disegna una singola traiettoria
+    function drawWalk(ctx, positions, title, color = "royalblue") {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      if (!positions) return; // Se non ci sono dati
+
+      const n = positions.length;
+      const maxAbs = Math.max(...positions.map(Math.abs)) || 1;
+      const scaleY = (ctx.canvas.height / 2 - 10) / maxAbs;
+      const scaleX = ctx.canvas.width / n;
+
+      // Asse centrale
+      ctx.beginPath();
+      ctx.moveTo(0, ctx.canvas.height / 2);
+      ctx.lineTo(ctx.canvas.width, ctx.canvas.height / 2);
+      ctx.strokeStyle = "#aaa";
+      ctx.stroke();
+
+      // Cammino
+      ctx.beginPath();
+      ctx.moveTo(0, ctx.canvas.height / 2 - positions[0] * scaleY);
+      for (let i = 1; i < n; i++) {
+        ctx.lineTo(i * scaleX, ctx.canvas.height / 2 - positions[i] * scaleY);
+      }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Titolo
+      ctx.fillStyle = "#000";
+      ctx.font = "16px sans-serif";
+      ctx.textAlign = "start";
+      ctx.fillText(title, 10, 20);
+    }
+    
+    function calcMean(scores) {
+      if (scores.length === 0) return 0;
+      return scores.reduce((a, b) => a + b, 0) / scores.length;
+    }
+
+    /**
+     * Disegna un istogramma dei punteggi.
+     * @param {CanvasRenderingContext2D} ctx - Il contesto del canvas.
+     * @param {number[]} scores - Array di punteggi finali.
+     * @param {string} title - Titolo del grafico.
+     * @param {string} color - Colore delle barre.
+     * @param {number} minX - Valore minimo dell'asse X (per allineamento).
+     * @param {number} maxX - Valore massimo dell'asse X (per allineamento).
+     * @param {number} mean - Media pre-calcolata.
+     */
+    function drawHistogram(ctx, scores, title, color, minX, maxX, mean) {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      
+      const n = scores.length;
+      if (n === 0) return;
+
+      // 1. Binning (conta le frequenze di ogni punteggio)
+      const bins = new Map();
+      for (const score of scores) {
+        bins.set(score, (bins.get(score) || 0) + 1);
+      }
+      
+      // 2. Trova il conteggio massimo
+      let maxCount = 0;
+      for (const count of bins.values()) {
+        if (count > maxCount) maxCount = count;
+      }
+      if (maxCount === 0) maxCount = 1;
+
+      // 3. Scaling
+      const padding = { top: 30, bottom: 30, left: 10, right: 10 };
+      const chartHeight = ctx.canvas.height - padding.top - padding.bottom;
+      const chartWidth = ctx.canvas.width - padding.left - padding.right;
+      
+      const scaleY = chartHeight / maxCount;
+      
+      // Larghezza di ogni barra (un bin per ogni intero nel range)
+      const numBinsInRange = maxX - minX + 1;
+      const binWidth = Math.max(1.0, chartWidth / numBinsInRange);
+      
+      // 4. Disegna le barre
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      for (let score = minX; score <= maxX; score++) {
+        const count = bins.get(score) || 0;
+        if (count === 0) continue;
+        
+        const height = count * scaleY;
+        const x = padding.left + (score - minX) * binWidth;
+        const y = ctx.canvas.height - padding.bottom - height;
+        
+        // Usiamo binWidth - 1 per lasciare un piccolo spazio
+        ctx.rect(x, y, Math.max(1, binWidth - 1), height); 
+      }
+      ctx.fill();
+
+      // 5. Disegna l'asse X
+      ctx.strokeStyle = "#aaa";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padding.left, ctx.canvas.height - padding.bottom);
+      ctx.lineTo(ctx.canvas.width - padding.right, ctx.canvas.height - padding.bottom);
+      ctx.stroke();
+
+      // 6. Disegna Etichette e Titolo
+      ctx.fillStyle = "#000";
+      ctx.font = "16px sans-serif";
+      ctx.textAlign = "start";
+      ctx.fillText(title, padding.left, 20);
+      
+      ctx.font = "12px sans-serif";
+      ctx.textAlign = "center";
+      
+      // Etichette Min, Max e 0
+      ctx.fillText(minX, padding.left + binWidth / 2, ctx.canvas.height - padding.bottom + 15);
+      ctx.fillText(maxX, ctx.canvas.width - padding.right - binWidth / 2, ctx.canvas.height - padding.bottom + 15);
+      
+      const zeroXPos = padding.left + (0 - minX) * binWidth;
+      if (zeroXPos > padding.left + 15 && zeroXPos < ctx.canvas.width - padding.right - 15) {
+        ctx.fillText("0", zeroXPos, ctx.canvas.height - padding.bottom + 15);
+      }
+      
+      // 7. Disegna la linea della media
+      const meanXPos = padding.left + (mean - minX) * binWidth;
+      ctx.strokeStyle = "rgba(0,0,0,0.7)";
+      ctx.setLineDash([3, 3]);
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(meanXPos, ctx.canvas.height - padding.bottom);
+      ctx.lineTo(meanXPos, padding.top);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      ctx.fillStyle = "#000";
+      ctx.fillText(mean.toFixed(2), meanXPos, padding.top - 5);
+    }
+
+    function runSimulation() {
+      // 1. Leggi gli input
+      const nSteps = parseInt(document.getElementById("steps").value);
+      const pStart = parseFloat(document.getElementById("pStart").value);
+      const pEnd = parseFloat(document.getElementById("pEnd").value);
+      const numRounds = parseInt(document.getElementById("numRounds").value);
+
+      // 2. Definisci le probabilità
+      const pConst = pStart;
+      const pValuesVar = Array.from({ length: nSteps }, (_, i) =>
+        pStart + (pEnd - pStart) * (i / nSteps)
+      );
+      
+      const finalScoresConst = [];
+      const finalScoresVar = [];
+      
+      let lastWalkConst = null;
+      let lastWalkVar = null;
+
+      // 3. Esegui i round
+      for (let i = 0; i < numRounds; i++) {
+        // Genera una nuova sequenza casuale per questo round
+        const randoms = randomSequence(nSteps);
+
+        // Esegui entrambe le walk con la STESSA sequenza
+        const walkConst = generateWalkFromRandoms(randoms, pConst);
+        const walkVar = generateWalkFromRandoms(randoms, pValuesVar);
+
+        // Salva i punteggi finali
+        finalScoresConst.push(walkConst[walkConst.length - 1]);
+        finalScoresVar.push(walkVar[walkVar.length - 1]);
+
+        // Salva le traiettorie dell'ultimo round
+        if (i === numRounds - 1) {
+          lastWalkConst = walkConst;
+          lastWalkVar = walkVar;
+        }
+      }
+
+      // 4. Disegna le traiettorie dell'ultimo round
+      drawWalk(ctx1, lastWalkConst, `Ultima Traiettoria (p costante = ${pConst.toFixed(2)})`);
+      drawWalk(ctx2, lastWalkVar, `Ultima Traiettoria (p var = ${pStart.toFixed(2)} \u2192 ${pEnd.toFixed(2)})`, "tomato");
+
+      // 5. Disegna gli istogrammi
+      
+      // Calcola un range X comune per entrambi gli istogrammi
+      const allScores = [...finalScoresConst, ...finalScoresVar];
+      const minX = Math.min(...allScores);
+      const maxX = Math.max(...allScores);
+      // Aggiungi padding se min e max sono uguali
+      const commonMinX = (minX === maxX) ? minX - 1 : minX;
+      const commonMaxX = (minX === maxX) ? maxX + 1 : maxX;
+
+      // Calcola le medie
+      const meanConst = calcMean(finalScoresConst);
+      const meanVar = calcMean(finalScoresVar);
+      
+      // Disegna
+      drawHistogram(htx1, finalScoresConst, `P. Costante (Media ${meanConst.toFixed(2)})`, "royalblue", commonMinX, commonMaxX, meanConst);
+      drawHistogram(htx2, finalScoresVar, `P. Variabile (Media ${meanVar.toFixed(2)})`, "tomato", commonMinX, commonMaxX, meanVar);
+    }
+
+    document.getElementById("runBtn").addEventListener("click", runSimulation);
+
+    // Disegno iniziale al caricamento
+    runSimulation();
+  </script>
+</body>
+</html>

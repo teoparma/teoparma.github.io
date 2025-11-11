@@ -73,8 +73,8 @@ function drawTrajectories(data, n) {
     const y = d3.scaleLinear().domain([Math.min(-10, yMin), Math.max(10, yMax)]).range([height, 0]).nice();
 
     // Grid
-    svg.append("g").attr("class", "grid").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x).ticks(5).tickSize(-height));
-    svg.append("g").attr("class", "grid").call(d3.axisLeft(y).ticks(5).tickSize(-width));
+    svg.append("g").attr("class", "grid").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x).ticks(5).tickSize(-height).tickFormat(""));
+    svg.append("g").attr("class", "grid").call(d3.axisLeft(y).ticks(5).tickSize(-width).tickFormat(""));
     
     // Axes
     svg.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
@@ -162,7 +162,8 @@ function drawHistogram(simData, n) {
         .range([height, 0]).nice();
         
     // Grid
-    svg.append("g").attr("class", "grid").call(d3.axisLeft(y).ticks(5).tickSize(-width));
+    svg.append("g").attr("class", "grid").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x).tickSize(-height).tickFormat(""));
+    svg.append("g").attr("class", "grid").call(d3.axisLeft(y).ticks(5).tickSize(-width).tickFormat(""));
 
     // Axes
     svg.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
@@ -198,10 +199,6 @@ function drawHistogram(simData, n) {
         .on("mouseout", () => {
             tooltip.style("opacity", 0);
         });
-
-    // Line (Theoretical) - REMOVED
-    
-    // Theoretical Legend - REMOVED
 }
 
 // --- Main Controller ---

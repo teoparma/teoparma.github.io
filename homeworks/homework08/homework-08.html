@@ -84,20 +84,22 @@
 <body>
 
     <div class="container">
-        <h1>Homework 4 & 7: Similarities, Differences and Mathematical Properties</h1>
+        <h1>Homework 4 & 7: <br>Comparison and Mathematical Properties</h1>
 
-        <h2>Analogies: LLN vs. Random Walk</h2>
+        <h2>Comparison between LLN and Random Walk</h2>
         
         <p>Homework 7 (the simulation of a <strong>Random Walk</strong>) shares a deep mathematical foundation with Homework 4 (the <strong>Law of Large Numbers</strong>, or LLN). Both are, at their core, simulations of a <strong>Bernoulli process</strong>.</p>
         
         <p>A Bernoulli process is a sequence of $n$ independent trials, where each trial has exactly two outcomes (e.g., success/failure, secure/breached), and the probability of success remains constant for every trial (at least, in Model 1 of HW 7).</p>
 
+        <hr>
+
         <h3>Similarities</h3>
         <ul>
             <li><strong>Bernoulli Foundation:</strong> Both models are built on $n$ independent trials.
                 <ul>
-                    <li><strong>HW 4 (LLN):</strong> A "trial" is a coin flip, with outcomes {Success, Failure} and probability $p$.</li>
-                    <li><strong>HW 7 (Random Walk):</strong> A "trial" is a week, with outcomes {Secure, Breached} and probability <br>$q = (1-p)^m$.</li>
+                    <li><strong>HW 4 (LLN):</strong> A "trial" is a coin flip, with outcomes {Success [+1], Failure[+0]} and probability $p$.</li>
+                    <li><strong>HW 7 (Random Walk):</strong> A "trial" is a week, with outcomes {Secure[+1], Breached[-1]} and probability <br>$q = (1-p)^m$.</li>
                 </ul>
             </li>
             <li><strong>Binomial Core:</strong> In both models (assuming Model 1 of HW 7), the total number of "successes" ($k$ heads in HW 4, $k$ secure weeks in HW 7) follows a <strong>Binomial Distribution</strong>, $k \sim \text{Bin}(n, p)$. Model 2 of HW 7 (decreasing attackers) is a generalization known as a <strong>Poisson Binomial Distribution</strong>, as the probability $q_w$ is no longer identical for each trial.</li>
@@ -106,17 +108,15 @@
 
         <hr>
 
-        <h2>Revised Analysis: Key Differences</h2>
-        
-        <h3>Key Differences: Average vs. Displacement</h3>
-        <p>The primary difference between the two assignments is not in the underlying process, but in <strong>what is being measured</strong> and <strong>what concept is being demonstrated</strong>.</p>
+        <h3>Differences: Avagare vs Displacement</h3>
+                <p>The primary difference between the two assignments is not in the underlying process, but in <strong>what is being measured</strong> and <strong>what concept is being demonstrated</strong>.</p>
         
         <table>
             <thead>
                 <tr>
                     <th>Feature</th>
-                    <th>HW 4: Law of Large Numbers (LLN)</th>
-                    <th>HW 7: Random Walk (Server Security)</th>
+                    <th>HW 4: Law of Large Numbers</th>
+                    <th>HW 7: Random Walk</th>
                 </tr>
             </thead>
             <tbody>
@@ -127,8 +127,8 @@
                 </tr>
                 <tr>
                     <td><strong>Core Question</strong></td>
-                    <td>"What is the <i>true probability</i> of the process?"</td>
-                    <td>"How <i>far</i> from the origin has the process drifted?"</td>
+                    <td>"What is the <i>true probability</i> of success?"</td>
+                    <td>"How <i>far</i> from the origin has the process drifted (magnitude of displacement)?"</td>
                 </tr>
                 <tr>
                     <td><strong>Concept Demonstrated</strong></td>
@@ -137,8 +137,8 @@
                 </tr>
                 <tr>
                     <td><strong>Trajectory Plot</strong></td>
-                    <td>Trajectories converge "in a funnel" toward a single horizontal line (the probability $p$).</td>
-                    <td>Trajectories "fan out" and spread, moving away from the origin.</td>
+                    <td>Trajectories (means) converge "in a funnel" toward a single horizontal line (the probability $p$).</td>
+                    <td>Trajectories (scores) "fan out" and spread, moving away from the origin.</td>
                 </tr>
                 <tr>
                     <td><strong>Final Histogram</strong></td>
@@ -166,7 +166,7 @@
         $$P(k) = \binom{n}{k} q^k (1-q)^{n-k}$$
 
         <h3>Pascal's Triangle</h3>
-        <p>Pascal's Triangle is a recursive visualization of the binomial coefficients. Each number in the triangle is the sum of the two numbers directly above it: $C(n, k) = C(n-1, k-1) + C(n-1, k)$.</p>
+        <p>Pascal's Triangle (or Tartaglia's Triangle) is a recursive visualization of the binomial coefficients. Each number in the triangle is the sum of the two numbers directly above it: $C(n, k) = C(n-1, k-1) + C(n-1, k)$.</p>
 
         <p>This triangle is also a <strong>direct map of a symmetric random walk</strong> ($q=0.5$). The value at row $n$, position $k$, literally counts the number of distinct paths a walker can take from the origin (0,0) to reach that point in $n$ steps. The "score" $S = 2k - n$ is just a re-labeling of the $k$-th position in row $n$.</p>
         
