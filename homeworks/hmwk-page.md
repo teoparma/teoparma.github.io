@@ -6,4 +6,4 @@ Here you can find all the homeworks:
 - [Homework 5 - Measures of Location and Dispersion](/homework05/homework-05.html)
 - [Homework 6 - Online Mean and Variance Derivation and Implementation](/homework06/homework-06.html)
 - [Homework 7 - Penetration Score Process Simulation (Random Walk)](/homework07/homework-07.html)
-- [Homework 8 - Bernoulli Process and Candom Walk: Similarities, Differences and Mathematical Properties ](/homework08/homework-08.html)
+- [Homework 8 - Bernoulli Process and Random Walk: Similarities, Differences and Mathematical Properties ](/homework08/homework-08.html)
