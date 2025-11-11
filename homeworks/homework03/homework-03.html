@@ -48,7 +48,7 @@
 
     <div class="max-w-7xl mx-auto bg-white shadow-2xl rounded-xl p-6 sm:p-10">
         <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-600 mb-6 border-b-4 border-blue-100 pb-2">
-            Cracking RSA Encrypted Text with Frequency Analysis
+            Breaking RSA Encryption with Frequency Analysis
         </h1>
         <p class="text-gray-600 mb-8">
             Uses frequency analysis to decrypt the text. The decryption map is interactive.
@@ -232,7 +232,7 @@ Furthermore, recent empirical findings regarding psychedelics and altered states
         <h2 class="text-2xl font-bold text-gray-800 mb-4">How the Attack Works</h2>
         <p class="mb-4 text-gray-700">
             This attack is only possible because the RSA cryptography is being used in an
-            <strong>insecure and deterministic</strong> way (without "padding"). By encrypting each individual
+            <strong>insecure</strong> way. By encrypting each individual
             letter (<code>M</code>) in the exact same way every time, the algorithm is reduced to a simple
             <strong>monoalphabetic substitution cipher</strong>: every 'E' always becomes
             the same number <code>C<sub>E</sub></code>, every 'A' becomes <code>C<sub>A</sub></code>, and so on.
