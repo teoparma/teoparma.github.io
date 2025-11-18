@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homwork 9</title>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            text-align: justify;
+            font-family: system-ui, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            margin-top: 40px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        ul, ol {
+            margin-bottom: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.95em;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            background-color: #fff;
+        }
+        table thead tr {
+            background-color: #2c3e50;
+            color: #ffffff;
+            text-align: left;
+        }
+        table th, table td {
+            padding: 12px 15px;
+            border: 1px solid #dddddd;
+        }
+        table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        strong {
+            color: #000;
+        }
+        .proof-section {
+            text-align: left;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #2c3e50;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>1. Interpretations of Probability and the Axiomatic Resolution</h1>
+
+    <p>The concept of probability is foundational to statistics, yet its philosophical "meaning" has been subject to multiple interpretations. The axiomatic approach, formalized by Andrey Kolmogorov, provides a unifying mathematical framework that resolves the conceptual and operational inconsistencies inherent in these "competing" definitions.</p>
+
+    <h3>Main Interpretations of Probability</h3>
+
+    <ol>
+        <li>
+            <strong>The Classical (Laplacian) Interpretation:</strong>
+            <ul>
+                <li><strong>Definition:</strong> This is the earliest formal definition, attributed to Pierre-Simon Laplace. It defines probability in the context of games of chance. If a random experiment has \(N\) <strong>equiprobable</strong> and finite outcomes, and \(N_A\) of these outcomes are favorable to event \(A\), then the probability of \(A\) is \(P(A) = \frac{N_A}{N}\).</li>
+                <li><strong>Limitations:</strong> This definition is circular, as it relies on the concept of "equiprobable" outcomes, which is itself a probabilistic idea. It is also highly restrictive, as it only applies to finite sample spaces and cannot handle situations where outcomes are not equally likely (e.g., a biased coin) or where the sample space is infinite (e.g., "what is the probability of a randomly chosen real number being rational?").</li>
+            </ul>
+        </li>
+
+        <li>
+            <strong>The Frequentist (von Mises) Interpretation:</strong>
+            <ul>
+                <li><strong>Definition:</strong> Championed by Richard von Mises, this interpretation defines probability as the limiting relative frequency of an event in a large number of identical, repeatable trials. If \(n(A)\) is the number of times event \(A\) occurs in \(n\) trials, then \(P(A) = \lim_{n \to \infty} \frac{n(A)}{n}\).</li>
+                <li><strong>Limitations:</strong> The existence of this limit is a mathematical assumption, not an empirical fact. It is impractical to perform an infinite number of trials. More significantly, this interpretation struggles to assign probabilities to single, non-repeatable events (the <em>single-case probability problem</em>). For example, in the frequentist view, it is meaningless to discuss "the probability that candidate X will win the next election," as this event is unique and cannot be repeated under identical conditions.</li>
+            </ul>
+        </li>
+
+        <li>
+            <strong>The Bayesian (Subjective) Interpretation:</strong>
+            <ul>
+                <li><strong>Definition:</strong> This interpretation, developed from the work of Thomas Bayes and Bruno de Finetti, treats probability as a <strong>degree of belief</strong> or <em>confidence</em> held by a rational agent regarding the truth of a proposition. Probabilities are subjective and represent an agent's state of knowledge. These beliefs are updated in light of new evidence via Bayes' Theorem.</li>
+                <li><strong>Limitations:</strong> The primary criticism is its reliance on <em>subjectivity</em>. Two rational agents with different prior beliefs (initial degrees of belief) can assign different probabilities to the same event, even with the same data. This is often seen as unscientific, though proponents argue that as evidence accumulates, the beliefs of rational agents will converge (a process known as "washing out" of the priors).</li>
+            </ul>
+        </li>
+
+        <li>
+            <strong>The Geometric Interpretation:</strong>
+            <ul>
+                <li><strong>Definition:</strong> This is an extension of the classical model to continuous, uncountably infinite sample spaces. If an event \(A\) corresponds to a region within a total sample space \(\Omega\), the probability of \(A\) is the ratio of their "measures" (e.g., length, area, volume): \(P(A) = \frac{\text{Measure}(A)}{\text{Measure}(\Omega)}\).</li>
+                <li><strong>Limitations:</strong> Like the classical definition, this approach typically assumes a uniform distribution of probability over the space \(\Omega\) (the <em>principle of indifference</em>), which is not always justified.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h3>The Axiomatic Approach as a Resolution</h3>
+
+    <p>The conceptual inconsistencies above (e.g., probability as frequency vs. probability as belief) create a philosophical impasse. The <strong>axiomatic approach</strong>, developed by Andrey Kolmogorov in 1933, resolves this not by choosing a "correct" interpretation, but by abstracting the mathematical properties common to <em>all</em> of them.</p>
+
+    <p>Kolmogorov's system does not define what probability <em>is</em> (its ontology); it defines the rules it must <em>obey</em> (its mathematical behavior). It shifts the focus from semantics to a formal, mathematical structure.</p>
+
+    <p>The foundation is the <strong>probability space</strong>, a triplet \((\Omega, \mathcal{F}, P)\):</p>
+
+    <ol>
+        <li><strong>\(\Omega\) (The Sample Space):</strong> A non-empty set of all possible outcomes.</li>
+        <li><strong>\(\mathcal{F}\) (The Event Space):</strong> A \(\sigma\)-algebra on \(\Omega\), which is a collection of subsets of \(\Omega\) (called "events") that is closed under complement, countable unions, and countable intersections.</li>
+        <li><strong>\(P\) (The Probability Measure):</strong> A function \(P: \mathcal{F} \to [0, 1]\) that assigns a real number to every event, satisfying the following three axioms:
+            <ul>
+                <li><strong>Axiom 1 (Non-negativity):</strong> For any event \(A \in \mathcal{F}\), \(P(A) \ge 0\).</li>
+                <li><strong>Axiom 2 (Normalization):</strong> The probability of the entire sample space is 1, \(P(\Omega) = 1\).</li>
+                <li><strong>Axiom 3 (Countable Additivity):</strong> For any countable sequence of <strong>mutually disjoint</strong> events \(E_1, E_2, \dots\) (i.e., \(E_i \cap E_j = \emptyset\) for \(i \ne j\)),
+                $$P\left(\bigcup_{i=1}^\infty E_i\right) = \sum_{i=1}^\infty P(E_i)$$</li>
+            </ul>
+        </li>
+    </ol>
+
+    <p><strong>How this resolves inconsistencies:</strong><br>
+    The axiomatic framework acts as a <em>common language</em>. It demonstrates that the classical, frequentist, and geometric interpretations are all valid <em>models</em> that satisfy these axioms within their specific contexts. Furthermore, it establishes that "coherent" Bayesian degrees of belief (those that avoid a logical contradiction known as a "Dutch book") must also conform to these axioms.</p>
+
+    <p>By abstracting probability, Kolmogorov's axioms create a self-consistent, rigorous mathematical theory. This allows for the development of powerful theorems and the application of probability to far more complex areas (like continuous variables and stochastic processes) than any single interpretation could support on its own.</p>
+
+    <hr>
+
+    <h2>2. The Relationship Between Probability and Measure Theory</h2>
+
+    <p>The axiomatic approach reveals that <strong>probability theory is a specialized branch of measure theory</strong>. Measure theory is the branch of mathematics concerned with assigning a "size" or "measure" (like length, area, or volume) to sets. Probability theory is precisely the case where the "size" of the total space is 1.</p>
+
+    <p>This formal connection is established through a direct analogy of their core components:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Measure Theory Concept</th>
+                <th>Probabilistic Interpretation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>A Set \(\Omega\)</strong></td>
+                <td><strong>The Sample Space \(\Omega\)</strong> (all possible outcomes)</td>
+            </tr>
+            <tr>
+                <td><strong>A \(\sigma\)-algebra \(\mathcal{F}\)</strong></td>
+                <td><strong>The Event Space \(\mathcal{F}\)</strong> (the collection of all events we can assign a probability to)</td>
+            </tr>
+            <tr>
+                <td><strong>A Measurable Space \((\Omega, \mathcal{F})\)</strong></td>
+                <td>A set of outcomes and its associated set of events</td>
+            </tr>
+            <tr>
+                <td><strong>A Measure \(\mu\)</strong><br>A function \(\mu: \mathcal{F} \to [0, \infty]\) that is countably additive.</td>
+                <td><strong>A Probability Measure \(P\)</strong><br>A specific measure \(P: \mathcal{F} \to [0, 1]\) such that \(P(\Omega) = 1\).</td>
+            </tr>
+            <tr>
+                <td><strong>A Measure Space \((\Omega, \mathcal{F}, \mu)\)</strong></td>
+                <td><strong>A Probability Space \((\Omega, \mathcal{F}, P)\)</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Random Variables and Measurable Functions</h3>
+
+    <p>This relationship becomes most critical in defining a <strong>random variable</strong>.</p>
+
+    <ul>
+        <li>In <strong>measure theory</strong>, a <strong>measurable function</strong> \(f: (\Omega_1, \mathcal{F}_1) \to (\Omega_2, \mathcal{F}_2)\) is a function that preserves the structure of the \(\sigma\)-algebras. Specifically, the pre-image of any measurable set in \(\Omega_2\) must be a measurable set in \(\Omega_1\). (i.e., for any \(B \in \mathcal{F}_2\), \(f^{-1}(B) = \{\omega \in \Omega_1 \mid f(\omega) \in B\} \in \mathcal{F}_1\)).</li>
+        <li>In <strong>probability theory</strong>, a <strong>random variable</strong> \(X\) is <em>defined</em> as a measurable function from the probability space \((\Omega, \mathcal{F}, P)\) to the real numbers \((\mathbb{R}, \mathcal{B}(\mathbb{R}))\), where \(\mathcal{B}(\mathbb{R})\) is the <strong>Borel \(\sigma\)-algebra</strong> (the \(\sigma\)-algebra generated by all open intervals on \(\mathbb{R}\)).</li>
+    </ul>
+
+    <p><strong>Why this is crucial:</strong><br>
+    The "measurability" of a random variable \(X\) guarantees that for any interval \([a, b] \subset \mathbb{R}\), the set \(\{\omega \in \Omega \mid X(\omega) \in [a, b]\}\) is an event in \(\mathcal{F}\).</p>
+
+    <p>In simpler terms: The formalism of measure theory is what ensures that it is mathematically valid to ask the question, "What is the probability that \(X\) falls between \(a\) and \(b\)?" (i.e., \(P(a \le X \le b)\)). Without this, the entire foundation of probability distributions (CDFs, PDFs) would collapse.</p>
+
+    <hr>
+
+    <h2>3. Derivations from the Axioms</h2>
+
+    <p>The power of the axioms lies in their ability to derive all other fundamental properties of probability.</p>
+
+    <p><strong>Prerequisite Properties (derived from Axioms):</strong></p>
+    <ul>
+        <li>\(P(\emptyset) = 0\)</li>
+        <li><strong>Finite Additivity:</strong> For <em>disjoint</em> \(A\) and \(B\), \(P(A \cup B) = P(A) + P(B)\).</li>
+        <li><strong>Complement Rule:</strong> \(P(A^c) = 1 - P(A)\).</li>
+        <li><strong>Monotonicity:</strong> If \(A \subseteq B\), then \(P(A) \le P(B)\).</li>
+    </ul>
+
+    <h3>Derivation of Subadditivity (Boole's Inequality)</h3>
+
+    <p><strong>Statement:</strong> For any finite or countable sequence of events \(E_1, E_2, \dots\) (not necessarily disjoint),
+    $$P\left(\bigcup_{i=1}^\infty E_i\right) \le \sum_{i=1}^\infty P(E_i)$$</p>
+
+    <div class="proof-section">
+        <p><strong>Proof Part 1: The Base Case (Two Events)</strong></p>
+        <p>We first prove the inequality for two events, \(P(A \cup B) \le P(A) + P(B)\).</p>
+        <ol>
+            <li>Decompose \(A \cup B\) into disjoint sets: \(A \cup B = A \cup (B \setminus A)\). Note that \(B \setminus A = B \cap A^c\).</li>
+            <li>By <strong>Finite Additivity</strong> (Axiom 3): \(P(A \cup B) = P(A) + P(B \cap A^c)\).</li>
+            <li>Consider event \(B\). We can write it as the disjoint union \(B = (B \cap A) \cup (B \cap A^c)\). By additivity: \(P(B) = P(B \cap A) + P(B \cap A^c)\).</li>
+            <li>Since \(P(B \cap A) \ge 0\) (Axiom 1), it follows that \(P(B) \ge P(B \cap A^c)\).</li>
+            <li style="text-align: left;">Substituting this back into step 2 yields: \(P(A \cup B) = P(A) + P(B \cap A^c) \le P(A) + P(B)\).</li>
+        </ol>
+    </div>
+
+    <div class="proof-section">
+        <p><strong>Proof Part 2: Generalization to a Countable Sequence</strong></p>
+        <p>To prove the property for a countable sequence of events \(E_1, E_2, \dots\), we use a technique called <strong>disjointification</strong> to construct a new sequence of mutually exclusive events \(F_1, F_2, \dots\) that covers the same space.</p>
+        <ol>
+            <li>Let \(F_1 = E_1\).</li>
+            <li>Let \(F_2 = E_2 \setminus E_1\) (outcomes in \(E_2\) but not \(E_1\)).</li>
+            <li>Let \(F_3 = E_3 \setminus (E_1 \cup E_2)\).</li>
+            <li>In general, define \(F_n = E_n \setminus \left(\bigcup_{k=1}^{n-1} E_k\right)\).</li>
+        </ol>
+        <p>This construction ensures three key properties:</p>
+        <ul>
+            <li>The sets \(F_n\) are <strong>mutually disjoint</strong>.</li>
+            <li>For every \(n\), \(F_n \subseteq E_n\). By Monotonicity, this implies \(P(F_n) \le P(E_n)\).</li>
+            <li>The union of the new sequence is identical to the union of the original sequence: \(\bigcup_{n=1}^\infty F_n = \bigcup_{n=1}^\infty E_n\).</li>
+        </ul>
+        <p>We can now apply <strong>Axiom 3 (Countable Additivity)</strong> to the disjoint sets \(F_n\):</p>
+        $$P\left(\bigcup_{n=1}^\infty E_n\right) = P\left(\bigcup_{n=1}^\infty F_n\right) = \sum_{n=1}^\infty P(F_n)$$
+        <p>Since \(P(F_n) \le P(E_n)\) for all \(n\), we can substitute the inequality into the sum:</p>
+        $$\sum_{n=1}^\infty P(F_n) \le \sum_{n=1}^\infty P(E_n)$$
+        <p>Combining these results gives the final inequality:</p>
+        $$P\left(\bigcup_{n=1}^\infty E_n\right) \le \sum_{n=1}^\infty P(E_n)$$
+    </div>
+    <p><strong>Q.E.D.</strong></p>
+
+    <h3>Derivation of the Inclusion-Exclusion Principle</h3>
+
+    <p><strong>Statement (for two events):</strong> For <em>any</em> two events \(A\) and \(B\) (not necessarily disjoint),
+    $$P(A \cup B) = P(A) + P(B) - P(A \cap B)$$</p>
+
+    <p><strong>Proof:</strong></p>
+    
+    <div class="proof-section">
+        <ol>
+            <li>We start with the same disjoint decomposition from the subadditivity proof:
+            \(A \cup B = A \cup (B \cap A^c)\).</li>
+
+            <li>By <strong>Finite Additivity</strong> (Axiom 3), since \(A\) and \((B \cap A^c)\) are disjoint:
+            \(P(A \cup B) = P(A) + P(B \cap A^c)\).
+            <em>(This is Equation 1)</em></li>
+
+            <li>Now, we must find an expression for \(P(B \cap A^c)\). We use the same decomposition of \(B\) as before:
+            \(B = (B \cap A) \cup (B \cap A^c)\).</li>
+
+            <li>By <strong>Finite Additivity</strong>, since \((B \cap A)\) and \((B \cap A^c)\) are disjoint:
+            \(P(B) = P(B \cap A) + P(B \cap A^c)\).</li>
+
+            <li>Rearranging this equation to solve for \(P(B \cap A^c)\), we get:
+            \(P(B \cap A^c) = P(B) - P(B \cap A)\).
+            <em>(This is Equation 2)</em></li>
+
+            <li>Finally, substitute Equation 2 back into Equation 1:
+            \(P(A \cup B) = P(A) + \left( P(B) - P(B \cap A) \right)\).</li>
+
+            <li>This simplifies to the principle of inclusion-exclusion:
+            \(P(A \cup B) = P(A) + P(B) - P(A \cap B)\).</li>
+        </ol>
+    </div>
+
+    <p><strong>Q.E.D.</strong></p>
+
+    <p>This principle can be extended by induction to any \(n\) events. For example, for three events, it becomes:
+    \(P(A \cup B \cup C) = P(A) + P(B) + P(C) - P(A \cap B) - P(A \cap C) - P(B \cap C) + P(A \cap B \cap C)\).</p>
+
+</div>
+
+</body>
+</html>
