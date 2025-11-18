@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework 10</title>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-top: 40px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #34495e;
+            margin-top: 25px;
+        }
+        p { margin-bottom: 15px; text-align: justify; }
+        ul, ol { margin-bottom: 20px; }
+        li { margin-bottom: 10px; }
+        
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .theorem {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+        }
+        strong { color: #000; }
+
+        /* Simulation Dashboard Styling */
+        .dashboard {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .control-group label {
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            width: 80px;
+        }
+        button.run-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+            margin-top: auto;
+        }
+        button.run-btn:hover { background-color: #2980b9; }
+        
+        canvas {
+            background-color: #fff;
+            max-height: 400px;
+            width: 100%;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 1.1em;
+            background: #eef;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Simulation and Analysis of a Counting Process via Discrete Approximation</h1>
+
+    <p>This report addresses the simulation of a stochastic counting process over a time interval \(T\) by discretizing time into \(n\) infinitesimally small subintervals. The objective is to analyze the resulting behavior as \(n \to \infty\) and identify the fundamental stochastic process this simulation approximates.</p>
+
+    <h2>1. The Simulation Setup: Bernoulli Approximation</h2>
+
+    <p>We consider a time interval \([0, T]\). To simulate a process where events occur "independently and uniformly," we employ a discretization strategy:</p>
+
+    <ol>
+        <li><strong>Discretization:</strong> Divide the total interval \(T\) into \(n\) subintervals (or "bins") of equal length \(\Delta t = T/n\).</li>
+        <li><strong>Bernoulli Trials:</strong> Treat each subinterval \(i\) (where \(i = 1, \dots, n\)) as an independent Bernoulli trial.</li>
+        <li><strong>Probability Assignment:</strong> We assign the probability of a "success" (an event occurring) in any single subinterval as \(p = \frac{\lambda T}{n}\).</li>
+    </ol>
+
+    <p>In this setup, the total number of events, denoted by the random variable \(N_n\), is the sum of \(n\) independent Bernoulli trials. Consequently, \(N_n\) follows a <strong>Binomial Distribution</strong>:</p>
+    $$N_n \sim \text{Binomial}(n, p) \quad \text{with} \quad p = \frac{\lambda T}{n}$$
+
+    <h3>Interactive Simulation (The Jump Process)</h3>
+    <p>The dashboard below executes the simulation multiple times (M runs). The first graph visualizes the path of a single run, while the second verifies the distribution of the final counts, \(N(T)\), against the theoretical Poisson distribution.</p>
+
+    <div class="dashboard">
+        <div class="controls">
+            <div class="control-group">
+                <label for="lambdaInput">Rate (&lambda;):</label>
+                <input type="number" id="lambdaInput" value="5" min="1" step="1">
+            </div>
+            <div class="control-group">
+                <label for="timeInput">Time (T):</label>
+                <input type="number" id="timeInput" value="1" min="1" max="10">
+            </div>
+            <div class="control-group">
+                <label for="intervalsInput">Subintervals (n):</label>
+                <input type="number" id="intervalsInput" value="5000" min="100" step="100">
+            </div>
+            <div class="control-group">
+                <label for="runsInput">Number of Runs (M):</label>
+                <input type="number" id="runsInput" value="1000" min="10" step="100">
+            </div>
+            <button class="run-btn" onclick="updateSimulation()">Run Simulation</button>
+        </div>
+
+        <h4>Sample Path N(t) (Last Run)</h4>
+        <canvas id="simulationChart"></canvas>
+        
+        <h4>Distribution of Final Count N(T) (M Runs)</h4>
+        <canvas id="histogramChart"></canvas>
+
+        <div class="stats">
+            <span id="stat-theoretical">Expected Events: 0</span>
+            <span id="stat-actual">Actual Events: 0</span>
+            <span id="stat-runs">Runs (M): 0</span>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>2. Identification of the Stochastic Process</h2>
+
+    <p>As we increase the resolution of the simulation (letting \(n \to \infty\) while keeping the rate \(\lambda\) constant), the Binomial distribution converges to a specific limit. This is described by the <strong>Poisson Limit Theorem</strong>.</p>
+
+    <div class="theorem">
+        <p><strong>Theorem:</strong> Let \(N_n \sim \text{Binomial}(n, p_n)\). If \(n \to \infty\) and \(p_n \to 0\) such that the product \(n p_n \to \lambda T\) (a constant), then for any integer \(k \ge 0\):</p>
+        $$\lim_{n \to \infty} P(N_n = k) = \frac{e^{-\lambda T} (\lambda T)^k}{k!}$$
+    </div>
+
+    <p>This limit corresponds to the probability mass function of the <strong>Poisson Distribution</strong>. Consequently, the continuous-time process we are approximating is the <strong>Homogeneous Poisson Process</strong>.</p>
+
+    <hr>
+
+    <h2>3. Theoretical Properties of the Resulting Process</h2>
+
+    <p>The Poisson Process identified above is the fundamental model for counting random events. It is characterized by the following rigorous properties:</p>
+
+    <h3>A. Independent Increments</h3>
+    <p>The number of events occurring in disjoint time intervals are independent random variables. For example, the number of events in \([0, t_1]\) is independent of the number of events in any subsequent interval \((t_1, t_2]\).</p>
+
+    <h3>B. Stationary Increments</h3>
+    <p>The process is homogeneous in time. The probability distribution of the number of events depends only on the <em>length</em> of the interval, not its absolute location on the timeline. The expected number of events in any interval of length \(\tau\) is \(\lambda \tau\).</p>
+
+    <h3>C. Orderliness (Simple Jump Process)</h3>
+    <p>This property guarantees that events occur strictly one at a time (simple jumps of size 1). The probability of two or more events in an infinitesimally small interval \(\Delta t\) is negligible: \(P(N(\Delta t) \ge 2) = o(\Delta t)\).</p>
+
+    <h3>D. Inter-arrival Times and the Memoryless Property</h3>
+    <p>The time between consecutive events (inter-arrival times \(T_k\)) are i.i.d. according to the <strong>Exponential Distribution</strong>:</p>
+    $$f(t) = \lambda e^{-\lambda t}, \quad t \ge 0$$
+    <p><strong>The Memoryless Property:</strong> The Exponential distribution is the unique continuous distribution that is "memoryless." This means the process does not "remember" how long has passed since the last event. Specifically, \(P(T > t+s \mid T > s) = P(T > t)\).</p>
+
+    <hr>
+
+    <h2>4. Interpretation of the Rate Parameter \(\lambda\)</h2>
+
+    <p>The parameter \(\lambda\) is central to the physical interpretation of the process.</p>
+
+    <ul>
+        <li><strong>Intensity of the Process:</strong> \(\lambda\) represents the <strong>expected rate of occurrences per unit of time</strong>. For example, if \(\lambda = 5\) and time is measured in hours, we expect an average of 5 events per hour.</li>
+        <li><strong>Relationship to Probability:</strong> For a very small time interval \(dt\), the probability of an event occurring is approximately proportional to \(\lambda\):
+        $$P(\text{1 event in } dt) \approx \lambda \cdot dt$$</li>
+        <li><strong>Relationship to Inter-arrival Time:</strong> The mean of the exponential distribution is \(E[T] = 1/\lambda\). Thus, \(\lambda\) is the reciprocal of the average time waiting for the next event. A higher \(\lambda\) implies a shorter average wait time.</li>
+    </ul>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
