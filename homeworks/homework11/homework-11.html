@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework 11</title>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        h1, h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            margin-top: 40px;
+            border-bottom: 1px solid #bdc3c7;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        /* Dashboard Style */
+        .dashboard {
+            background-color: #ecf0f1;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #bdc3c7;
+            margin: 30px 0;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            color: #34495e;
+        }
+        input, select {
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            width: 110px;
+        }
+        button {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #1a5276; }
+        
+        canvas {
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+            max-height: 400px;
+            width: 100%;
+        }
+        .discussion-box {
+            background-color: #e8f4fc;
+            border-left: 5px solid #3498db;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .note {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+        
+        /* Style for hidden/visible OU parameters */
+        .ou-params {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Brownian Motion Simulation (Wiener Process)</h1>
+
+    <p>In this exercise, we analyze the transition from discrete processes (like Poisson counting) to continuous stochastic processes. The objective is to simulate trajectories of Stochastic Differential Equations (SDEs), focusing on the <strong>Wiener Process</strong> and its generalization, the <strong>Ornstein-Uhlenbeck Process</strong>.</p>
+
+    <h2>1. The Mathematical Model</h2>
+    <p>Unlike the Poisson process, where the system evolves via discrete "+1" jumps, these processes are characterized by continuous, Gaussian increments. The general SDE form is:</p>
+    $$dX_t = f(X_t)dt + g(X_t)dW_t$$
+    <p>where \(f\) is the drift and \(g\) is the diffusion. To simulate this on a computer, we discretize time using the <strong>Euler-Maruyama Method</strong>:</p>
+    $$X_{i+1} = X_i + f(X_i)\Delta t + g(X_i) \sqrt{\Delta t} \cdot Z_i$$
+    <p>Here, \(Z_i\) is a random variable with a <strong>Standard Normal</strong> distribution (\(Z \sim \mathcal{N}(0, 1)\)), representing the normalized stochastic "shock" at each step. This is generated via the Box-Muller transform.</p>
+
+    <h2>2. Interactive Simulation</h2>
+    <p>Use the panel below to generate different realizations. You can switch between the standard Brownian Motion (Wiener) and the Mean-Reverting Process (Ornstein-Uhlenbeck).</p>
+
+    <div class="dashboard">
+        <div class="controls">
+            <div class="control-group">
+                <label for="processType">Process Type:</label>
+                <select id="processType" onchange="toggleParams()">
+                    <option value="wiener">Wiener Process</option>
+                    <option value="ou">Ornstein-Uhlenbeck</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="TInput">Total Time (T):</label>
+                <input type="number" id="TInput" value="10" min="0.1" step="0.1">
+            </div>
+            <div class="control-group">
+                <label for="NInput">Intervals (N):</label>
+                <input type="number" id="NInput" value="1000" min="100" step="100">
+            </div>
+            <div class="control-group">
+                <label for="sigmaInput">Volatility (&sigma;):</label>
+                <input type="number" id="sigmaInput" value="1" min="0.1" step="0.1">
+            </div>
+            
+            <div class="control-group ou-params" id="thetaGroup">
+                <label for="thetaInput">Theta (&theta;):</label>
+                <input type="number" id="thetaInput" value="0.5" step="0.1">
+            </div>
+            <div class="control-group ou-params" id="muGroup">
+                <label for="muInput">Mu (&mu;):</label>
+                <input type="number" id="muInput" value="0" step="0.1">
+            </div>
+
+            <button onclick="runSimulation()">Generate Trajectory</button>
+        </div>
+        <canvas id="wienerChart"></canvas>
+        <div class="note" id="statsOutput">Ready for simulation...</div>
+    </div>
+
+    <h2>3. Discussion of Implementation Methodology</h2>
+    
+    <div class="discussion-box">
+        <h3>From "Count" to "Drift & Diffusion"</h3>
+        <p>In the previous code (Poisson), the logic was based on a Bernoulli trial: <em>"if a low number comes up, add 1"</em>. Here the logic changes radically. There is no longer an <code>if</code> condition. Instead, <strong>a change happens at every single time step</strong>.</p>
+        
+        <h3>Noise Generation (Box-Muller)</h3>
+        <p>Computers natively generate <em>uniform</em> random numbers (between 0 and 1), but Brownian Motion requires <em>normal</em> numbers. To solve this without external libraries, the code implements the <strong>Box-Muller</strong> algorithm.</p>
+        <p>The algorithm takes two independent uniform numbers, \(u\) and \(v\), and geometrically transforms them into a normal number \(Z\) using the formula:</p>
+        $$Z = \sqrt{-2 \ln(u)} \cdot \cos(2\pi v)$$
+        <p>This value \(Z\) is then scaled by \(\sqrt{\Delta t}\). This scaling is crucial: it reflects the physical property of Brownian motion where the average displacement scales with the square root of time.</p>
+
+        <h3>Generalization: Ornstein-Uhlenbeck</h3>
+        <p>While the Wiener process has zero drift (\(f=0\)), the simulator can now handle the Ornstein-Uhlenbeck process, which models mean reversion. In this case, the drift term becomes \(f(X_t) = \theta(\mu - X_t)\). This creates a "force" that pulls the process back towards the mean \(\mu\), counteracting the stochastic diffusion \(dW_t\).</p>
+    </div>
+
+</div>
+
+<script>
+    // Variable for the chart
+    let myChart = null;
+
+    // --- Box-Muller Transform ---
+    function boxMullerRandom() {
+        let u = 0, v = 0;
+        while(u === 0) u = Math.random(); 
+        while(v === 0) v = Math.random();
+        return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    }
+
+    // --- UI Logic ---
+    function toggleParams() {
+        const type = document.getElementById('processType').value;
+        const ouParams = document.querySelectorAll('.ou-params');
+        ouParams.forEach(el => {
+            el.style.display = (type === 'ou') ? 'flex' : 'none';
+        });
+    }
+
+    // --- Core Simulation Logic ---
+    function runSimulation() {
+        // Get Inputs
+        const type = document.getElementById('processType').value;
+        const T = parseFloat(document.getElementById('TInput').value);
+        const N = parseInt(document.getElementById('NInput').value);
+        const sigma = parseFloat(document.getElementById('sigmaInput').value);
+        
+        // OU Parameters (if applicable)
+        let theta = 0, mu = 0;
+        let X_t = 0; 
+
+        if (type === 'ou') {
+            theta = parseFloat(document.getElementById('thetaInput').value);
+            mu = parseFloat(document.getElementById('muInput').value);
+            // Ideally start at mu or keep 0. Let's start at mu to show reversion or 0 to show pull.
+            // Standard convention: start at X0 (here simplified to 0 or mu)
+            X_t = 0; 
+        }
+
+        const dt = T / N;
+        let pathData = [{x: 0, y: X_t}];
+
+        // Euler-Maruyama Loop
+        for (let i = 0; i < N; i++) {
+            // 1. Generate stochastic increment Z ~ N(0,1)
+            const Z = boxMullerRandom();
+            
+            // 2. Calculate Drift (f)
+            let drift = 0;
+            if (type === 'wiener') {
+                drift = 0;
+            } else if (type === 'ou') {
+                drift = theta * (mu - X_t);
+            }
+
+            // 3. Update using Euler-Maruyama: X_new = X + f*dt + g*sqrt(dt)*Z
+            // Note: g = sigma
+            X_t += drift * dt + sigma * Math.sqrt(dt) * Z;
+            
+            pathData.push({x: (i + 1) * dt, y: X_t});
+        }
+
+        updateChart(pathData, T, type);
+        
+        // Update text info
+        let theoreticalInfo = "";
+        if (type === 'wiener') {
+            theoreticalInfo = `Theoretically distributed as \( \mathcal{N}(0, ${ (sigma*sigma*T).toFixed(2) }) \)`;
+        } else {
+            theoreticalInfo = `Mean Reverting towards \(\mu = ${mu}\)`;
+        }
+
+        document.getElementById('statsOutput').innerHTML = 
+            `Final Value \( X_T = ${X_t.toFixed(4)} \) (${theoreticalInfo})`;
+        
+        // Retrigger MathJax for the new text
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    // --- Chart Management ---
+    function updateChart(dataPoints, T, type) {
+        const ctx = document.getElementById('wienerChart').getContext('2d');
+        
+        if (myChart) myChart.destroy();
+
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: (type === 'wiener') ? 'Wiener Process W(t)' : 'OU Process X(t)',
+                    data: dataPoints,
+                    borderColor: (type === 'wiener') ? '#2980b9' : '#e74c3c', // Blue for Wiener, Red for OU
+                    borderWidth: 1.5,
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        title: { display: true, text: 'Time (t)' },
+                        min: 0, max: T
+                    },
+                    y: {
+                        title: { display: true, text: 'Value X(t)' }
+                    }
+                },
+                animation: { duration: 0 },
+                plugins: { legend: { display: true } }
+            }
+        });
+    }
+
+    // Auto-start
+    window.onload = function() {
+        toggleParams(); // Set correct initial visibility
+        runSimulation();
+    };
+</script>
+
+</body>
+</html>
