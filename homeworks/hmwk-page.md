@@ -9,4 +9,4 @@ Here you can find all the homeworks:
 - [Homework 8 - Bernoulli Process and Random Walk: Similarities, Differences and Mathematical Properties ](/homework08/homework-08.html)
 - [Homework 9 - Interpretations of Probability and Axiomatic Approach and Relationship with Measure Theory](/homework09/homework-09.html)
 - [Homework 10 - Simulation and Analysis of a Counting Process](/homework10/homework-10.html)
-- [Homwework 11 - Brownian Motion Simulation (Wiener Process)](/homework11/homework-11.html)
+- [Homework 11 - Brownian Motion Simulation (Wiener Process)](/homework11/homework-11.html)
